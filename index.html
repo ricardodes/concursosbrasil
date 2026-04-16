@@ -3,1475 +3,1118 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ConcursasBR — Concursos Públicos em Tempo Real</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>ConcursasBR — Concursos Públicos Grátis, Sem API</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --ink: #0a0a0f;
-  --ink2: #1a1a2e;
-  --surface: #f5f3ee;
-  --surface2: #eceae4;
-  --surface3: #e2dfd8;
-  --accent: #e84545;
-  --accent2: #ff6b35;
-  --green: #00c896;
-  --blue: #4f8ef7;
-  --gold: #f0b429;
-  --muted: #7a7a8c;
-  --card: #ffffff;
-  --border: rgba(10,10,15,0.08);
-  --shadow: 0 2px 20px rgba(10,10,15,0.08);
-  --shadow-lg: 0 8px 40px rgba(10,10,15,0.14);
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--surface);
-  color: var(--ink);
-  min-height: 100vh;
-  line-height: 1.6;
-  font-size: 15px;
-}
-
-/* ── HEADER ───────────────────────────────────────── */
-.site-header {
-  background: var(--ink);
-  padding: 0 32px;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 60px;
-  border-bottom: 2px solid var(--accent);
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-}
-
-.logo-mark {
-  width: 32px;
-  height: 32px;
-  background: var(--accent);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 14px;
-  color: #fff;
-  letter-spacing: -0.5px;
-}
-
-.logo-text {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: 18px;
-  color: #fff;
-  letter-spacing: -0.3px;
-}
-
-.logo-text span { color: var(--accent); }
-
-.header-meta {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.live-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(0,200,150,0.15);
-  border: 1px solid rgba(0,200,150,0.3);
-  border-radius: 20px;
-  padding: 4px 12px;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--green);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.live-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--green);
-  border-radius: 50%;
-  animation: pulse-dot 2s infinite;
-}
-
-@keyframes pulse-dot {
-  0%,100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.8); }
-}
-
-.last-update {
-  font-size: 11px;
-  color: rgba(255,255,255,0.4);
-  font-family: 'DM Mono', monospace;
-}
-
-/* ── HERO ─────────────────────────────────────────── */
-.hero {
-  background: var(--ink2);
-  padding: 48px 32px 40px;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -60px;
-  right: -60px;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(232,69,69,0.15) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.hero-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.hero-eyebrow {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--accent);
-  margin-bottom: 12px;
-}
-
-.hero-title {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(28px, 4vw, 46px);
-  font-weight: 800;
-  color: #fff;
-  line-height: 1.1;
-  letter-spacing: -1px;
-  margin-bottom: 12px;
-}
-
-.hero-title span {
-  color: var(--accent);
-  display: inline-block;
-}
-
-.hero-sub {
-  font-size: 15px;
-  color: rgba(255,255,255,0.5);
-  max-width: 560px;
-  margin-bottom: 28px;
-  line-height: 1.7;
-}
-
-/* ── SEARCH BAR ───────────────────────────────────── */
-.search-wrap {
-  display: flex;
-  gap: 10px;
-  max-width: 720px;
-}
-
-.search-input {
-  flex: 1;
-  background: rgba(255,255,255,0.08);
-  border: 1.5px solid rgba(255,255,255,0.12);
-  border-radius: 12px;
-  padding: 14px 20px;
-  font-size: 15px;
-  font-family: 'DM Sans', sans-serif;
-  color: #fff;
-  outline: none;
-  transition: all 0.2s;
-}
-
-.search-input::placeholder { color: rgba(255,255,255,0.3); }
-.search-input:focus {
-  border-color: var(--accent);
-  background: rgba(255,255,255,0.1);
-}
-
-.search-btn {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  padding: 14px 24px;
-  font-size: 14px;
-  font-weight: 700;
-  font-family: 'DM Sans', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.search-btn:hover { background: #d63030; transform: translateY(-1px); }
-.search-btn:active { transform: translateY(0); }
-.search-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-/* ── STATS BAR ────────────────────────────────────── */
-.stats-bar {
-  background: var(--ink);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  padding: 14px 32px;
-}
-
-.stats-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  gap: 32px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.stat-num {
-  font-family: 'DM Mono', monospace;
-  font-size: 20px;
-  font-weight: 500;
-  color: #fff;
-}
-
-.stat-label {
-  font-size: 11px;
-  color: rgba(255,255,255,0.35);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.stat-divider {
-  width: 1px;
-  height: 28px;
-  background: rgba(255,255,255,0.08);
-}
-
-/* ── MAIN LAYOUT ──────────────────────────────────── */
-.main-wrap {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 28px 32px;
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 24px;
-  align-items: start;
-}
-
-/* ── SIDEBAR / FILTERS ────────────────────────────── */
-.sidebar {
-  background: var(--card);
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  padding: 20px;
-  position: sticky;
-  top: 80px;
-}
-
-.sidebar-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--muted);
-  margin-bottom: 14px;
-}
-
-.filter-group {
-  margin-bottom: 20px;
-}
-
-.filter-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--muted);
-  margin-bottom: 8px;
-  display: block;
-}
-
-.filter-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  color: var(--ink);
-  text-align: left;
-  transition: all 0.15s;
-  margin-bottom: 3px;
-}
-
-.filter-btn:hover { background: var(--surface2); }
-.filter-btn.active {
-  background: rgba(232,69,69,0.08);
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.filter-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.filter-count {
-  margin-left: auto;
-  font-size: 11px;
-  font-family: 'DM Mono', monospace;
-  color: var(--muted);
-  background: var(--surface2);
-  padding: 1px 6px;
-  border-radius: 4px;
-}
-
-.filter-btn.active .filter-count {
-  background: rgba(232,69,69,0.15);
-  color: var(--accent);
-}
-
-.refresh-btn {
-  width: 100%;
-  padding: 10px;
-  background: var(--ink);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  transition: all 0.15s;
-  margin-top: 12px;
-}
-
-.refresh-btn:hover { background: var(--accent); }
-.refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-/* ── CONTENT AREA ─────────────────────────────────── */
-.content-area {}
-
-.content-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.result-count {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.result-count strong {
-  color: var(--ink);
-  font-weight: 600;
-}
-
-.sort-select {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 7px 12px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  color: var(--ink);
-  cursor: pointer;
-  outline: none;
-}
-
-/* ── LOADING ──────────────────────────────────────── */
-.loading-state {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  gap: 16px;
-}
-
-.loading-state.active { display: flex; }
-
-.loader {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--surface3);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.loading-text {
-  font-size: 14px;
-  color: var(--muted);
-  text-align: center;
-}
-
-.loading-steps {
-  font-size: 12px;
-  color: var(--muted);
-  font-family: 'DM Mono', monospace;
-}
-
-/* ── CONCURSO CARDS ───────────────────────────────── */
-.cards-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.concurso-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 20px 22px;
-  transition: all 0.2s;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.concurso-card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  border-radius: 4px 0 0 4px;
-}
-
-.concurso-card.status-aberto::before { background: var(--green); }
-.concurso-card.status-previsto::before { background: var(--gold); }
-.concurso-card.status-inscricoes::before { background: var(--blue); }
-.concurso-card.status-encerrado::before { background: var(--muted); }
-
-.concurso-card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
-  border-color: rgba(10,10,15,0.14);
-}
-
-.card-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  flex: 1;
-}
-
-.tag {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  padding: 3px 8px;
-  border-radius: 4px;
-}
-
-.tag-area { background: rgba(79,142,247,0.1); color: var(--blue); }
-.tag-nivel { background: rgba(240,180,41,0.12); color: #b8860b; }
-.tag-vagas { background: rgba(0,200,150,0.1); color: #00a077; }
-.tag-salario { background: rgba(232,69,69,0.08); color: var(--accent); }
-
-.status-pill {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.status-pill.aberto { background: rgba(0,200,150,0.12); color: var(--green); border: 1px solid rgba(0,200,150,0.25); }
-.status-pill.inscricoes { background: rgba(79,142,247,0.12); color: var(--blue); border: 1px solid rgba(79,142,247,0.25); }
-.status-pill.previsto { background: rgba(240,180,41,0.12); color: #c49000; border: 1px solid rgba(240,180,41,0.25); }
-.status-pill.encerrado { background: rgba(122,122,140,0.1); color: var(--muted); border: 1px solid rgba(122,122,140,0.2); }
-
-.card-orgao {
-  font-family: 'Syne', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.3;
-  margin-bottom: 5px;
-}
-
-.card-cargo {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 10px;
-  line-height: 1.5;
-}
-
-.card-bottom {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.card-meta {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.card-meta svg { opacity: 0.6; flex-shrink: 0; }
-
-.card-prazo {
-  margin-left: auto;
-  font-size: 11px;
-  font-family: 'DM Mono', monospace;
-  color: var(--muted);
-}
-
-.card-prazo.urgente { color: var(--accent); font-weight: 600; }
-
-.card-link {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--accent);
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: rgba(232,69,69,0.06);
-  transition: background 0.15s;
-}
-
-.card-link:hover { background: rgba(232,69,69,0.12); }
-
-/* ── EMPTY STATE ──────────────────────────────────── */
-.empty-state {
-  display: none;
-  text-align: center;
-  padding: 60px 20px;
-}
-
-.empty-state.active { display: block; }
-
-.empty-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-}
-
-.empty-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: var(--ink);
-}
-
-.empty-sub { font-size: 14px; color: var(--muted); }
-
-/* ── CATEGORIES SECTION ───────────────────────────── */
-.quick-search {
-  margin-bottom: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.quick-chip {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 6px 14px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s;
-  color: var(--ink);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.quick-chip:hover {
-  background: var(--ink);
-  color: #fff;
-  border-color: var(--ink);
-}
-
-.quick-chip .chip-icon { font-size: 14px; }
-
-/* ── NOTIFICATION BANNER ──────────────────────────── */
-.notif-banner {
-  background: linear-gradient(135deg, var(--ink2), #16213e);
-  border: 1px solid rgba(79,142,247,0.2);
-  border-radius: 14px;
-  padding: 16px 20px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.notif-icon {
-  width: 36px;
-  height: 36px;
-  background: rgba(79,142,247,0.15);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  flex-shrink: 0;
-}
-
-.notif-text { flex: 1; }
-.notif-title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 2px; }
-.notif-sub { font-size: 12px; color: rgba(255,255,255,0.4); }
-
-.notif-action {
-  background: var(--blue);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: 'DM Sans', sans-serif;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: opacity 0.15s;
-}
-
-.notif-action:hover { opacity: 0.85; }
-
-/* ── FOOTER ───────────────────────────────────────── */
-.site-footer {
-  background: var(--ink);
-  padding: 28px 32px;
-  margin-top: 40px;
-  text-align: center;
-}
-
-.footer-text {
-  font-size: 12px;
-  color: rgba(255,255,255,0.3);
-  line-height: 1.8;
-}
-
-.footer-text a { color: rgba(255,255,255,0.5); text-decoration: none; }
-
-/* ── RESPONSIVE ───────────────────────────────────── */
-@media (max-width: 900px) {
-  .main-wrap {
-    grid-template-columns: 1fr;
-    padding: 20px 16px;
-  }
-  .sidebar { position: static; }
-  .hero { padding: 32px 16px 28px; }
-  .stats-bar { padding: 12px 16px; }
-  .search-wrap { flex-direction: column; }
-  .stats-inner { gap: 20px; }
-}
-
-@media (max-width: 600px) {
-  .site-header { padding: 0 16px; }
-  .header-meta .last-update { display: none; }
-  .card-prazo { display: none; }
-}
-
-/* ── SKELETON LOADING ─────────────────────────────── */
-.skeleton {
-  background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
-  border-radius: 6px;
-}
-
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-.skeleton-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 20px 22px;
-}
-
-/* ── MODAL ────────────────────────────────────────── */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(10,10,15,0.7);
-  z-index: 2000;
-  padding: 20px;
-  overflow-y: auto;
-  backdrop-filter: blur(4px);
-}
-
-.modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; padding-top: 60px; }
-
-.modal-box {
-  background: var(--card);
-  border-radius: 20px;
-  max-width: 640px;
-  width: 100%;
-  padding: 28px;
-  position: relative;
-}
-
-.modal-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: var(--surface2);
-  border: none;
-  border-radius: 8px;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 22px;
-  font-weight: 800;
-  margin-bottom: 8px;
-  color: var(--ink);
-  padding-right: 40px;
-  line-height: 1.3;
-}
-
-.modal-badge {
-  margin-bottom: 16px;
-}
-
-.modal-section {
-  margin-bottom: 16px;
-}
-
-.modal-section-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--muted);
-  margin-bottom: 5px;
-}
-
-.modal-section-value {
-  font-size: 14px;
-  color: var(--ink);
-  line-height: 1.7;
-}
-
-.modal-link-btn {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  text-align: center;
-  margin-top: 20px;
-  text-decoration: none;
-}
-
-.modal-link-btn:hover { background: #d63030; }
+:root{
+  --ink:#0d0d14;--ink2:#1a1a2e;--sur:#f4f2ed;--sur2:#ebe8e0;--sur3:#dedad1;
+  --acc:#e84545;--grn:#00c896;--blu:#4f8ef7;--gld:#f0b429;--pur:#8b5cf6;
+  --muted:#7a7a8c;--card:#fff;--brd:rgba(13,13,20,.07);
+  --sh:0 2px 16px rgba(13,13,20,.07);--shl:0 8px 36px rgba(13,13,20,.13);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.6}
+
+/* ─── HEADER ─────────────────────────────────────── */
+header{background:var(--ink);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:500;border-bottom:2px solid var(--acc)}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.lm{width:30px;height:30px;background:var(--acc);border-radius:7px;font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:#fff;display:flex;align-items:center;justify-content:center}
+.lt{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:#fff}
+.lt b{color:var(--acc)}
+.hright{display:flex;align-items:center;gap:10px}
+.hbadge{display:flex;align-items:center;gap:5px;background:rgba(0,200,150,.14);border:1px solid rgba(0,200,150,.28);border-radius:18px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--grn);text-transform:uppercase;letter-spacing:.5px}
+.hdot{width:5px;height:5px;background:var(--grn);border-radius:50%;animation:pd 2s infinite}
+@keyframes pd{0%,100%{opacity:1}50%{opacity:.35}}
+.htime{font-size:10px;color:rgba(255,255,255,.3);font-family:'DM Mono',monospace}
+.free-tag{background:rgba(139,92,246,.2);border:1px solid rgba(139,92,246,.35);border-radius:18px;padding:3px 10px;font-size:10px;font-weight:700;color:#c4b5fd;letter-spacing:.3px}
+
+/* ─── HERO ───────────────────────────────────────── */
+.hero{background:var(--ink2);padding:38px 28px 32px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;background:radial-gradient(circle,rgba(232,69,69,.12) 0%,transparent 65%);pointer-events:none}
+.hi{max-width:1140px;margin:0 auto}
+.heyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
+.htitle{font-family:'Syne',sans-serif;font-size:clamp(22px,3.8vw,42px);font-weight:800;color:#fff;line-height:1.1;letter-spacing:-1px;margin-bottom:8px}
+.htitle span{color:var(--acc)}
+.hsub{font-size:13px;color:rgba(255,255,255,.42);max-width:520px;margin-bottom:10px;line-height:1.7}
+.hfree{display:inline-flex;align-items:center;gap:7px;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3);border-radius:8px;padding:7px 14px;font-size:12px;color:#c4b5fd;margin-bottom:22px;font-weight:500}
+.hfree strong{color:#a78bfa;font-weight:700}
+.sw{display:flex;gap:9px;max-width:660px}
+.si{flex:1;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.11);border-radius:11px;padding:12px 16px;font-size:14px;font-family:'DM Sans',sans-serif;color:#fff;outline:none;transition:all .2s}
+.si::placeholder{color:rgba(255,255,255,.28)}
+.si:focus{border-color:var(--acc);background:rgba(255,255,255,.1)}
+.sb{background:var(--acc);color:#fff;border:none;border-radius:11px;padding:12px 20px;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:all .18s}
+.sb:hover{background:#d63030;transform:translateY(-1px)}
+.sb:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ─── STATS BAR ──────────────────────────────────── */
+.sbar{background:var(--ink);border-bottom:1px solid rgba(255,255,255,.05);padding:11px 28px}
+.sinner{max-width:1140px;margin:0 auto;display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.sitem{display:flex;align-items:center;gap:6px}
+.snum{font-family:'DM Mono',monospace;font-size:18px;color:#fff;font-weight:500}
+.slbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.4px}
+.sdiv{width:1px;height:22px;background:rgba(255,255,255,.06)}
+
+/* ─── SOURCES BAR ────────────────────────────────── */
+.srcbar{background:rgba(0,200,150,.06);border-bottom:1px solid rgba(0,200,150,.15);padding:9px 28px}
+.srcinner{max-width:1140px;margin:0 auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.src-lbl{font-size:10.5px;color:var(--grn);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.src-chip{font-size:10.5px;background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.2);color:var(--grn);border-radius:4px;padding:2px 7px;font-weight:500;display:flex;align-items:center;gap:4px}
+.src-chip.loading{background:rgba(240,180,41,.1);border-color:rgba(240,180,41,.2);color:var(--gld)}
+.src-chip.error{background:rgba(232,69,69,.1);border-color:rgba(232,69,69,.2);color:var(--acc)}
+
+/* ─── MAIN LAYOUT ────────────────────────────────── */
+.mw{max-width:1140px;margin:0 auto;padding:20px 28px;display:grid;grid-template-columns:238px 1fr;gap:18px;align-items:start}
+
+/* ─── SIDEBAR ────────────────────────────────────── */
+.sidebar{background:var(--card);border-radius:13px;border:1px solid var(--brd);padding:16px;position:sticky;top:74px}
+.sbt{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px}
+.fg{margin-bottom:15px}
+.fl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px;display:block}
+.fb{display:flex;align-items:center;gap:6px;width:100%;padding:6px 9px;border-radius:6px;border:none;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink);text-align:left;transition:all .12s;margin-bottom:2px}
+.fb:hover{background:var(--sur2)}
+.fb.active{background:rgba(232,69,69,.08);color:var(--acc);font-weight:600}
+.fdc{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.fc{margin-left:auto;font-size:9px;font-family:'DM Mono',monospace;color:var(--muted);background:var(--sur2);padding:1px 5px;border-radius:3px}
+.fb.active .fc{background:rgba(232,69,69,.14);color:var(--acc)}
+.rbtn{width:100%;padding:8px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .14s;margin-top:8px}
+.rbtn:hover{background:var(--acc)}
+.rbtn:disabled{opacity:.5;cursor:not-allowed}
+
+.sideinfo{background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.15);border-radius:9px;padding:11px;margin-top:12px;font-size:11px;color:var(--muted);line-height:1.7}
+.sideinfo strong{color:var(--pur)}
+.sideinfo a{color:var(--blu);text-decoration:none;font-weight:600}
+
+/* ─── CONTENT ────────────────────────────────────── */
+.ch2{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;flex-wrap:wrap;gap:8px}
+.rc{font-size:12.5px;color:var(--muted)}
+.rc strong{color:var(--ink);font-weight:600}
+.srtsel{background:var(--card);border:1px solid var(--brd);border-radius:7px;padding:5px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink);cursor:pointer;outline:none}
+
+/* ─── QUICK SEARCH ───────────────────────────────── */
+.qs{margin-bottom:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.qsl{font-size:10.5px;color:var(--muted);font-weight:600;margin-right:2px}
+.qc{background:var(--card);border:1px solid var(--brd);border-radius:17px;padding:4px 11px;font-size:11.5px;cursor:pointer;transition:all .12s;color:var(--ink)}
+.qc:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ─── LOADING ────────────────────────────────────── */
+.ls{display:none;flex-direction:column;align-items:center;padding:48px 20px;gap:12px}
+.ls.on{display:flex}
+.ldr{width:36px;height:36px;border:3px solid var(--sur3);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ltxt{font-size:13px;color:var(--muted);text-align:center}
+.lstep{font-size:10.5px;color:var(--muted);font-family:'DM Mono',monospace}
+
+/* ─── EMPTY ──────────────────────────────────────── */
+.es{display:none;text-align:center;padding:48px 20px}
+.es.on{display:block}
+.es-ico{font-size:40px;margin-bottom:11px}
+.es-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:5px}
+.es-sub{font-size:12.5px;color:var(--muted)}
+
+/* ─── CARDS ──────────────────────────────────────── */
+.cg{display:flex;flex-direction:column;gap:10px}
+.cc{background:var(--card);border:1px solid var(--brd);border-radius:13px;padding:16px 18px;position:relative;overflow:hidden;cursor:pointer;transition:all .17s}
+.cc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+.cc.s-aberto::before{background:var(--grn)}
+.cc.s-inscricoes::before{background:var(--blu)}
+.cc.s-previsto::before{background:var(--gld)}
+.cc.s-encerrado::before{background:var(--muted)}
+.cc.s-rss::before{background:var(--pur)}
+.cc:hover{box-shadow:var(--shl);transform:translateY(-2px);border-color:rgba(13,13,20,.13)}
+.ctop{display:flex;align-items:flex-start;justify-content:space-between;gap:9px;margin-bottom:7px}
+.ctgs{display:flex;flex-wrap:wrap;gap:4px;flex:1}
+.tag{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:2px 6px;border-radius:4px}
+.te{background:rgba(79,142,247,.1);color:var(--blu)}
+.tn{background:rgba(240,180,41,.12);color:#9a6e00}
+.tv{background:rgba(0,200,150,.1);color:#008060}
+.ts{background:rgba(232,69,69,.08);color:var(--acc)}
+.trss{background:rgba(139,92,246,.1);color:var(--pur)}
+.sp{font-size:9.5px;font-weight:700;letter-spacing:.35px;padding:3px 8px;border-radius:17px;white-space:nowrap;flex-shrink:0}
+.sp.aberto{background:rgba(0,200,150,.12);color:var(--grn);border:1px solid rgba(0,200,150,.23)}
+.sp.inscricoes{background:rgba(79,142,247,.12);color:var(--blu);border:1px solid rgba(79,142,247,.23)}
+.sp.previsto{background:rgba(240,180,41,.12);color:#b88a00;border:1px solid rgba(240,180,41,.22)}
+.sp.encerrado{background:rgba(122,122,140,.1);color:var(--muted);border:1px solid rgba(122,122,140,.18)}
+.sp.rss{background:rgba(139,92,246,.12);color:var(--pur);border:1px solid rgba(139,92,246,.22)}
+.co{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:3px}
+.ccar{font-size:12px;color:var(--muted);margin-bottom:9px;line-height:1.5}
+.cbottom{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.cm{display:flex;align-items:center;gap:3px;font-size:10.5px;color:var(--muted)}
+.cp{margin-left:auto;font-size:10px;font-family:'DM Mono',monospace;color:var(--muted)}
+.cp.urg{color:var(--acc);font-weight:700}
+.cl{font-size:10.5px;font-weight:600;color:var(--acc);text-decoration:none;padding:2px 8px;border-radius:5px;background:rgba(232,69,69,.07);transition:background .12s;display:flex;align-items:center;gap:3px;white-space:nowrap}
+.cl:hover{background:rgba(232,69,69,.14)}
+.cl-rss{color:var(--pur);background:rgba(139,92,246,.08)}
+.cl-rss:hover{background:rgba(139,92,246,.15)}
+
+/* ─── FONTE BADGE ────────────────────────────────── */
+.fonte-badge{font-size:9px;color:rgba(139,92,246,.6);font-family:'DM Mono',monospace;letter-spacing:.3px;margin-top:5px}
+
+/* ─── MODAL ──────────────────────────────────────── */
+.mo{display:none;position:fixed;inset:0;background:rgba(13,13,20,.72);z-index:1000;padding:16px;overflow-y:auto;backdrop-filter:blur(5px)}
+.mo.on{display:flex;align-items:flex-start;justify-content:center;padding-top:50px}
+.mb{background:var(--card);border-radius:17px;max-width:580px;width:100%;padding:24px;position:relative;animation:mi .2s ease}
+@keyframes mi{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.mc{position:absolute;top:12px;right:12px;background:var(--sur2);border:none;border-radius:6px;width:27px;height:27px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center}
+.mt{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;margin-bottom:5px;padding-right:32px;line-height:1.3;color:var(--ink)}
+.mbg{margin-bottom:15px}
+.mgr{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:14px}
+.mf label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);display:block;margin-bottom:2px}
+.mf .v{font-size:13px;color:var(--ink);font-weight:500}
+.mf .vbig{font-size:19px;font-family:'Syne',sans-serif;font-weight:800}
+.mf .vmoney{font-size:16px;font-weight:700;color:var(--grn)}
+.mdesc{font-size:12.5px;color:var(--muted);line-height:1.7;padding:12px;background:var(--sur);border-radius:8px;margin-bottom:14px}
+.mlink{display:block;width:100%;padding:12px;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;margin-bottom:6px;transition:all .15s}
+.mlink.pri{background:var(--acc);color:#fff}
+.mlink.pri:hover{background:#d63030}
+.mlink.sec{background:var(--sur2);color:var(--ink)}
+.mlink.sec:hover{background:var(--sur3)}
+.mlink.pur{background:rgba(139,92,246,.1);color:var(--pur)}
+.mlink.pur:hover{background:rgba(139,92,246,.2)}
+.mwarn{margin-top:11px;padding:9px 11px;background:rgba(240,180,41,.07);border-radius:7px;font-size:10.5px;color:var(--muted);line-height:1.6}
+
+/* ─── FOOTER ─────────────────────────────────────── */
+footer{background:var(--ink);padding:22px 28px;margin-top:32px;text-align:center}
+.ft{font-size:10.5px;color:rgba(255,255,255,.26);line-height:2}
+.ft a{color:rgba(255,255,255,.42);text-decoration:none}
+.ft a:hover{color:rgba(255,255,255,.7)}
+
+@media(max-width:880px){.mw{grid-template-columns:1fr;padding:14px 14px}.sidebar{position:static}.hero,.sbar,.srcbar,header,footer{padding-left:14px;padding-right:14px}.sw{flex-direction:column}.mgr{grid-template-columns:1fr}}
+@media(max-width:560px){.hright .htime,.cp{display:none}}
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
-<header class="site-header">
+<header>
   <a href="#" class="logo">
-    <div class="logo-mark">CB</div>
-    <span class="logo-text">Concursa<span>BR</span></span>
+    <div class="lm">CB</div>
+    <span class="lt">Concursa<b>BR</b></span>
   </a>
-  <div class="header-meta">
-    <div class="live-badge">
-      <div class="live-dot"></div>
-      Atualizado ao Vivo
-    </div>
-    <span class="last-update" id="last-update-time">—</span>
+  <div class="hright">
+    <span class="free-tag">✨ 100% Grátis</span>
+    <div class="hbadge"><div class="hdot"></div>Ao Vivo</div>
+    <span class="htime" id="htime">—</span>
   </div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-inner">
-    <div class="hero-eyebrow">🇧🇷 Todos os Concursos Públicos do Brasil</div>
-    <h1 class="hero-title">Encontre seu<br><span>concurso ideal</span></h1>
-    <p class="hero-sub">Busca inteligente com IA — encontra concursos abertos, previstos e com inscrições em todos os órgãos do Brasil, atualizado diariamente.</p>
-    <div class="search-wrap">
-      <input
-        type="text"
-        id="search-input"
-        class="search-input"
-        placeholder="Ex: Analista Previdenciário, Polícia Federal, Prefeitura SP..."
-        onkeydown="if(event.key==='Enter') buscarConcursos()"
-      />
-      <button class="search-btn" id="search-btn" onclick="buscarConcursos()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        Buscar Agora
+  <div class="hi">
+    <div class="heyebrow">🇧🇷 Concursos Públicos — Atualização Automática</div>
+    <h1 class="htitle">Seu painel de<br><span>concursos públicos</span></h1>
+    <p class="hsub">Concursos reais atualizados direto das fontes — PCI Concursos, QConcursos e sites oficiais. Sem cadastro, sem API paga, sem limite.</p>
+    <div class="hfree">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <strong>100% gratuito</strong> · Sem conta · Sem API Key · Atualiza sozinho
+    </div>
+    <div class="sw">
+      <input type="text" id="si" class="si"
+        placeholder="Buscar: Polícia Federal, INSS, TJ, professor, SP..."
+        onkeydown="if(event.key==='Enter')buscar()"/>
+      <button class="sb" id="sb" onclick="buscar()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Buscar
       </button>
     </div>
   </div>
 </section>
 
-<!-- STATS BAR -->
-<div class="stats-bar">
-  <div class="stats-inner">
-    <div class="stat-item">
-      <div class="stat-num" id="stat-abertos">—</div>
-      <div class="stat-label">Abertos</div>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-      <div class="stat-num" id="stat-inscricoes">—</div>
-      <div class="stat-label">Inscrições</div>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-      <div class="stat-num" id="stat-previstos">—</div>
-      <div class="stat-label">Previstos</div>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-      <div class="stat-num" id="stat-total">—</div>
-      <div class="stat-label">Total Encontrados</div>
-    </div>
+<!-- STATS -->
+<div class="sbar">
+  <div class="sinner">
+    <div class="sitem"><span class="snum" id="sn-t">—</span><span class="slbl">Total</span></div>
+    <div class="sdiv"></div>
+    <div class="sitem"><span class="snum" id="sn-ab">—</span><span class="slbl">Abertos</span></div>
+    <div class="sdiv"></div>
+    <div class="sitem"><span class="snum" id="sn-in">—</span><span class="slbl">Inscrições</span></div>
+    <div class="sdiv"></div>
+    <div class="sitem"><span class="snum" id="sn-pr">—</span><span class="slbl">Previstos</span></div>
+    <div class="sdiv"></div>
+    <div class="sitem"><span class="snum" id="sn-rss" style="color:var(--pur)">—</span><span class="slbl">Via RSS</span></div>
+  </div>
+</div>
+
+<!-- SOURCES STATUS -->
+<div class="srcbar">
+  <div class="srcinner">
+    <span class="src-lbl">Fontes:</span>
+    <span class="src-chip loading" id="src-pci-n">⏳ PCI Nacional</span>
+    <span class="src-chip loading" id="src-pci-f">⏳ PCI Federal</span>
+    <span class="src-chip loading" id="src-pci-e">⏳ PCI Estadual</span>
+    <span class="src-chip loading" id="src-pci-m">⏳ PCI Municipal</span>
+    <span class="src-chip loading" id="src-base">⏳ Base Verificada</span>
   </div>
 </div>
 
 <!-- MAIN -->
-<div class="main-wrap">
-
+<div class="mw">
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sidebar-title">Filtrar por</div>
-
-    <div class="filter-group">
-      <span class="filter-label">Status</span>
-      <button class="filter-btn active" onclick="setFilter('status','todos')" data-filter="status-todos">
-        <span class="filter-dot" style="background:var(--accent)"></span> Todos
-        <span class="filter-count" id="fc-todos">0</span>
-      </button>
-      <button class="filter-btn" onclick="setFilter('status','aberto')" data-filter="status-aberto">
-        <span class="filter-dot" style="background:var(--green)"></span> Abertos
-        <span class="filter-count" id="fc-aberto">0</span>
-      </button>
-      <button class="filter-btn" onclick="setFilter('status','inscricoes')" data-filter="status-inscricoes">
-        <span class="filter-dot" style="background:var(--blue)"></span> Inscrições Abertas
-        <span class="filter-count" id="fc-inscricoes">0</span>
-      </button>
-      <button class="filter-btn" onclick="setFilter('status','previsto')" data-filter="status-previsto">
-        <span class="filter-dot" style="background:var(--gold)"></span> Previstos
-        <span class="filter-count" id="fc-previsto">0</span>
-      </button>
-      <button class="filter-btn" onclick="setFilter('status','encerrado')" data-filter="status-encerrado">
-        <span class="filter-dot" style="background:var(--muted)"></span> Encerrados
-        <span class="filter-count" id="fc-encerrado">0</span>
-      </button>
+    <div class="sbt">Filtros</div>
+    <div class="fg">
+      <span class="fl">Status</span>
+      <button class="fb active" onclick="setF('status','todos')" data-f="status-todos"><span class="fdc" style="background:var(--acc)"></span>Todos<span class="fc" id="fc-t">0</span></button>
+      <button class="fb" onclick="setF('status','aberto')" data-f="status-aberto"><span class="fdc" style="background:var(--grn)"></span>Abertos<span class="fc" id="fc-ab">0</span></button>
+      <button class="fb" onclick="setF('status','inscricoes')" data-f="status-inscricoes"><span class="fdc" style="background:var(--blu)"></span>Inscrições<span class="fc" id="fc-in">0</span></button>
+      <button class="fb" onclick="setF('status','previsto')" data-f="status-previsto"><span class="fdc" style="background:var(--gld)"></span>Previstos<span class="fc" id="fc-pv">0</span></button>
+      <button class="fb" onclick="setF('status','rss')" data-f="status-rss"><span class="fdc" style="background:var(--pur)"></span>Ao Vivo (RSS)<span class="fc" id="fc-rss">0</span></button>
     </div>
-
-    <div class="filter-group">
-      <span class="filter-label">Esfera</span>
-      <button class="filter-btn" onclick="setFilter('esfera','federal')" data-filter="esfera-federal">
-        <span>🏛️</span> Federal
-        <span class="filter-count" id="fc-federal">0</span>
-      </button>
-      <button class="filter-btn" onclick="setFilter('esfera','estadual')" data-filter="esfera-estadual">
-        <span>🗺️</span> Estadual
-        <span class="filter-count" id="fc-estadual">0</span>
-      </button>
-      <button class="filter-btn" onclick="setFilter('esfera','municipal')" data-filter="esfera-municipal">
-        <span>🏙️</span> Municipal
-        <span class="filter-count" id="fc-municipal">0</span>
-      </button>
+    <div class="fg">
+      <span class="fl">Esfera</span>
+      <button class="fb" onclick="setF('esfera','federal')" data-f="esfera-federal">🏛️ Federal<span class="fc" id="fc-fed">0</span></button>
+      <button class="fb" onclick="setF('esfera','estadual')" data-f="esfera-estadual">🗺️ Estadual<span class="fc" id="fc-est">0</span></button>
+      <button class="fb" onclick="setF('esfera','municipal')" data-f="esfera-municipal">🏙️ Municipal<span class="fc" id="fc-mun">0</span></button>
     </div>
-
-    <div class="filter-group">
-      <span class="filter-label">Escolaridade</span>
-      <button class="filter-btn" onclick="setFilter('nivel','superior')" data-filter="nivel-superior">
-        <span>🎓</span> Nível Superior
-        <span class="filter-count" id="fc-superior">0</span>
-      </button>
-      <button class="filter-btn" onclick="setFilter('nivel','medio')" data-filter="nivel-medio">
-        <span>📚</span> Nível Médio
-        <span class="filter-count" id="fc-medio">0</span>
-      </button>
-      <button class="filter-btn" onclick="setFilter('nivel','fundamental')" data-filter="nivel-fundamental">
-        <span>📖</span> Fund./Técnico
-        <span class="filter-count" id="fc-fundamental">0</span>
-      </button>
+    <div class="fg">
+      <span class="fl">Escolaridade</span>
+      <button class="fb" onclick="setF('nivel','superior')" data-f="nivel-superior">🎓 Nível Superior<span class="fc" id="fc-sup">0</span></button>
+      <button class="fb" onclick="setF('nivel','medio')" data-f="nivel-medio">📚 Nível Médio<span class="fc" id="fc-med">0</span></button>
+      <button class="fb" onclick="setF('nivel','fundamental')" data-f="nivel-fundamental">📖 Fund./Técnico<span class="fc" id="fc-fun">0</span></button>
     </div>
-
-    <button class="refresh-btn" id="refresh-btn" onclick="carregarConcursos()">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+    <button class="rbtn" id="rbtn" onclick="atualizarTudo()">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
       Atualizar Agora
     </button>
+    <div class="sideinfo">
+      <strong>Como funciona?</strong><br>
+      Lê diretamente os feeds RSS do <a href="https://pciconcursos.com.br" target="_blank">PCI Concursos</a> e combina com nossa base verificada.<br><br>
+      <strong>Atualiza a cada:</strong> 30 minutos automaticamente
+    </div>
   </aside>
 
   <!-- CONTENT -->
-  <main class="content-area">
-
-    <!-- NOTIFICATION -->
-    <div class="notif-banner">
-      <div class="notif-icon">🔔</div>
-      <div class="notif-text">
-        <div class="notif-title">Receba alertas de novos concursos</div>
-        <div class="notif-sub">Salve seus filtros favoritos e seja notificado quando abrirem</div>
-      </div>
-      <button class="notif-action" onclick="ativarNotificacoes()">Ativar Alertas</button>
+  <main>
+    <div class="qs">
+      <span class="qsl">Filtro rápido:</span>
+      <button class="qc" onclick="filtrarTexto('polícia federal')">🚔 PF</button>
+      <button class="qc" onclick="filtrarTexto('INSS')">🏥 INSS</button>
+      <button class="qc" onclick="filtrarTexto('receita federal')">💰 Receita Federal</button>
+      <button class="qc" onclick="filtrarTexto('banco')">🏦 Bancos</button>
+      <button class="qc" onclick="filtrarTexto('professor')">📚 Educação</button>
+      <button class="qc" onclick="filtrarTexto('tribunal')">⚖️ Judiciário</button>
+      <button class="qc" onclick="filtrarTexto('saúde enfermeiro médico')">🏥 Saúde</button>
+      <button class="qc" onclick="filtrarTexto('previdência RPPS')">📋 Previdência</button>
+      <button class="qc" onclick="limparFiltro()">✕ Limpar</button>
     </div>
 
-    <!-- QUICK SEARCHES -->
-    <div class="quick-search" id="quick-search">
-      <span style="font-size:12px;color:var(--muted);align-self:center;font-weight:600;margin-right:4px">Busca rápida:</span>
-      <button class="quick-chip" onclick="buscarRapido('Polícia Federal 2025 2026')"><span class="chip-icon">🚔</span> Polícia Federal</button>
-      <button class="quick-chip" onclick="buscarRapido('INSS concurso 2025 2026')"><span class="chip-icon">🏥</span> INSS</button>
-      <button class="quick-chip" onclick="buscarRapido('Receita Federal concurso 2025 2026')"><span class="chip-icon">💼</span> Receita Federal</button>
-      <button class="quick-chip" onclick="buscarRapido('Prefeitura concurso aberto 2025 2026')"><span class="chip-icon">🏙️</span> Prefeituras</button>
-      <button class="quick-chip" onclick="buscarRapido('professor concurso público 2025 2026')"><span class="chip-icon">📚</span> Educação</button>
-      <button class="quick-chip" onclick="buscarRapido('concurso saúde enfermagem médico 2025 2026')"><span class="chip-icon">🏥</span> Saúde</button>
-      <button class="quick-chip" onclick="buscarRapido('analista previdenciário RPPS concurso 2025 2026')"><span class="chip-icon">📋</span> Previdência</button>
-      <button class="quick-chip" onclick="buscarRapido('Banco do Brasil Caixa Econômica concurso 2025 2026')"><span class="chip-icon">🏦</span> Bancos</button>
-    </div>
-
-    <!-- CONTENT HEADER -->
-    <div class="content-header">
-      <div class="result-count" id="result-count">Carregando concursos...</div>
-      <select class="sort-select" id="sort-select" onchange="renderCards()">
-        <option value="relevancia">Mais relevantes</option>
-        <option value="prazo">Prazo mais próximo</option>
+    <div class="ch2">
+      <div class="rc" id="rc">Carregando...</div>
+      <select class="srtsel" id="srtsel" onchange="render()">
+        <option value="data">Mais recentes (RSS primeiro)</option>
+        <option value="az">A → Z (órgão)</option>
         <option value="vagas">Mais vagas</option>
-        <option value="salario">Maior salário</option>
       </select>
     </div>
 
-    <!-- LOADING STATE -->
-    <div class="loading-state" id="loading-state">
-      <div class="loader"></div>
-      <div class="loading-text">Buscando concursos com IA...</div>
-      <div class="loading-steps" id="loading-step">Consultando fontes oficiais</div>
+    <div class="ls" id="ls">
+      <div class="ldr"></div>
+      <div class="ltxt" id="ltxt">Buscando concursos...</div>
+      <div class="lstep" id="lstep">Conectando às fontes RSS</div>
     </div>
 
-    <!-- EMPTY STATE -->
-    <div class="empty-state" id="empty-state">
-      <div class="empty-icon">🔍</div>
-      <div class="empty-title">Nenhum concurso encontrado</div>
-      <div class="empty-sub">Tente outra busca ou clique em "Atualizar Agora"</div>
+    <div class="es" id="es">
+      <div class="es-ico">🔍</div>
+      <div class="es-title">Nenhum resultado</div>
+      <div class="es-sub">Tente outro termo de busca ou limpe os filtros</div>
     </div>
 
-    <!-- CARDS GRID -->
-    <div class="cards-grid" id="cards-grid"></div>
-
+    <div class="cg" id="cg"></div>
   </main>
 </div>
 
-<!-- MODAL DETALHE -->
-<div class="modal-overlay" id="detail-modal" onclick="if(event.target===this)fecharModal()">
-  <div class="modal-box">
-    <button class="modal-close" onclick="fecharModal()">✕</button>
-    <div class="modal-title" id="modal-title">—</div>
-    <div class="modal-badge" id="modal-badge"></div>
-    <div id="modal-body"></div>
+<!-- MODAL -->
+<div class="mo" id="mo" onclick="if(event.target===this)fecharM()">
+  <div class="mb">
+    <button class="mc" onclick="fecharM()">✕</button>
+    <div class="mt" id="m-t">—</div>
+    <div class="mbg" id="m-b"></div>
+    <div id="m-c"></div>
   </div>
 </div>
 
-<!-- FOOTER -->
-<footer class="site-footer">
-  <div class="footer-text">
-    ConcursasBR · Dados buscados via IA em tempo real · Sempre verifique as informações nas fontes oficiais dos órgãos<br>
-    Fontes: <a href="https://www.gov.br" target="_blank">gov.br</a> · <a href="https://pciconcursos.com.br" target="_blank">PCI Concursos</a> · <a href="https://www.qconcursos.com" target="_blank">QConcursos</a> · Diário Oficial da União
+<footer>
+  <div class="ft">
+    ConcursasBR · Dados lidos em tempo real via RSS feeds públicos · Sempre confirme nas fontes oficiais<br>
+    <a href="https://pciconcursos.com.br" target="_blank">PCI Concursos</a> ·
+    <a href="https://www.qconcursos.com" target="_blank">QConcursos</a> ·
+    <a href="https://www.in.gov.br" target="_blank">Diário Oficial da União</a> ·
+    <a href="https://www.gov.br" target="_blank">Gov.br</a> ·
+    <a href="https://www.cebraspe.org.br" target="_blank">CEBRASPE</a> ·
+    <a href="https://www.concursosfcc.com.br" target="_blank">FCC</a> ·
+    <a href="https://www.cesgranrio.org.br" target="_blank">CESGRANRIO</a>
   </div>
 </footer>
 
 <script>
-// ============================================================
-// STATE
-// ============================================================
-let allConcursos = [];
-let filtered = [];
-let activeFilter = { status: 'todos', esfera: null, nivel: null };
-let currentSearch = '';
-let isLoading = false;
+// ═══════════════════════════════════════════════════════
+// BASE VERIFICADA — 25 concursos com links reais
+// ═══════════════════════════════════════════════════════
+const BASE = [
+  // ── FEDERAIS ──────────────────────────────────────────────────────────
+  {
+    id:'pf', src:'base',
+    orgao:'Polícia Federal (PF)',
+    cargo:'Delegado, Agente, Escrivão, Papiloscopista, Perito Criminal',
+    status:'previsto', esfera:'federal', nivel:'superior',
+    vagas:'~1.500', salario:'R$ 7.547 a R$ 26.717', prazo:'Previsão: 2026',
+    banca:'CEBRASPE', uf:'BR',
+    desc:'⚠️ SEM EDITAL ABERTO. Concurso autorizado pelo MPOG, aguardando publicação do edital. Quando abrir, será pela CEBRASPE. Acompanhe a banca.',
+    link_edital:'https://www.cebraspe.org.br/concursos',
+    link_banca:'https://www.cebraspe.org.br/concursos'
+  },
+  {
+    id:'inss', src:'base',
+    orgao:'INSS — Instituto Nac. do Seguro Social',
+    cargo:'Técnico do Seguro Social',
+    status:'previsto', esfera:'federal', nivel:'medio',
+    vagas:'~7.500', salario:'R$ 5.905', prazo:'Previsão: 2025-2026',
+    banca:'a definir', uf:'BR',
+    desc:'⚠️ SEM EDITAL ABERTO. INSS não realiza concurso desde 2015. Autorização de vagas publicada. Acompanhe o PCI Concursos para o edital.',
+    link_edital:'https://www.pciconcursos.com.br/concursos/federais/',
+    link_banca:'https://www.pciconcursos.com.br/concursos/federais/'
+  },
+  {
+    id:'rfb', src:'base',
+    orgao:'Receita Federal do Brasil (SRFB)',
+    cargo:'Auditor Fiscal / Analista Tributário da Receita Federal',
+    status:'previsto', esfera:'federal', nivel:'superior',
+    vagas:'~500', salario:'R$ 12.295 a R$ 21.029', prazo:'Previsão: 2026',
+    banca:'CEBRASPE', uf:'BR',
+    desc:'⚠️ SEM EDITAL ABERTO. Uma das carreiras mais valorizadas do funcionalismo. Quando o edital sair, estará no site da CEBRASPE.',
+    link_edital:'https://www.cebraspe.org.br/concursos',
+    link_banca:'https://www.cebraspe.org.br/concursos'
+  },
+  {
+    id:'bb', src:'base',
+    orgao:'Banco do Brasil S.A.',
+    cargo:'Escriturário — Agente Comercial / Agente de Tecnologia',
+    status:'previsto', esfera:'federal', nivel:'medio',
+    vagas:'~4.000', salario:'R$ 3.622 + benef. (~R$ 5.200 total)', prazo:'Previsão: 2025-2026',
+    banca:'CESGRANRIO', uf:'BR',
+    desc:'⚠️ SEM EDITAL ABERTO. Último concurso do BB foi em 2023 (CESGRANRIO). Banco realiza seleção a cada ~2 anos. Acompanhe o portal de talentos.',
+    link_edital:'https://talentos.bb.com.br',
+    link_banca:'https://www.cesgranrio.org.br/eventos/concursos.aspx'
+  },
+  {
+    id:'cef', src:'base',
+    orgao:'Caixa Econômica Federal',
+    cargo:'Técnico Bancário Novo (TBN)',
+    status:'previsto', esfera:'federal', nivel:'medio',
+    vagas:'~3.000 a 5.000', salario:'R$ 3.194 + benef. (~R$ 4.900 total)', prazo:'Previsão: 2025-2026',
+    banca:'CESGRANRIO', uf:'BR',
+    desc:'⚠️ SEM EDITAL ABERTO EM 2025. Último concurso da CEF foi em 2023. Não há seleção em andamento. Acompanhe o portal de carreiras da Caixa.',
+    link_edital:'https://www.caixa.gov.br/carreiras',
+    link_banca:'https://www.cesgranrio.org.br/eventos/concursos.aspx'
+  },
+  {
+    id:'tcu', src:'base',
+    orgao:'TCU — Tribunal de Contas da União',
+    cargo:'Auditor Federal de Controle Externo',
+    status:'previsto', esfera:'federal', nivel:'superior',
+    vagas:'~80', salario:'R$ 21.947', prazo:'Previsão: 2025-2026',
+    banca:'CEBRASPE', uf:'BR',
+    desc:'⚠️ SEM EDITAL ABERTO. Uma das carreiras mais prestigiadas. Quando abrir, o edital estará na CEBRASPE.',
+    link_edital:'https://www.cebraspe.org.br/concursos',
+    link_banca:'https://www.cebraspe.org.br/concursos'
+  },
+  {
+    id:'cgu', src:'base',
+    orgao:'CGU — Controladoria-Geral da União',
+    cargo:'Auditor Federal de Finanças e Controle',
+    status:'previsto', esfera:'federal', nivel:'superior',
+    vagas:'~300', salario:'R$ 19.650', prazo:'Previsão: 2025-2026',
+    banca:'CEBRASPE', uf:'BR',
+    desc:'⚠️ SEM EDITAL ABERTO. Carreira de controle interno federal com ótima remuneração. Edital previsto pela CEBRASPE.',
+    link_edital:'https://www.cebraspe.org.br/concursos',
+    link_banca:'https://www.cebraspe.org.br/concursos'
+  },
+  {
+    id:'anatel', src:'base',
+    orgao:'ANATEL — Agência Nac. de Telecomunicações',
+    cargo:'Especialista em Regulação de Telecomunicações',
+    status:'previsto', esfera:'federal', nivel:'superior',
+    vagas:'~150', salario:'R$ 19.198', prazo:'Previsão: 2025-2026',
+    banca:'CEBRASPE', uf:'BR',
+    desc:'⚠️ SEM EDITAL ABERTO. Carreira de agência reguladora, estável e bem remunerada. Acompanhe a CEBRASPE.',
+    link_edital:'https://www.cebraspe.org.br/concursos',
+    link_banca:'https://www.cebraspe.org.br/concursos'
+  },
+  {
+    id:'mpf', src:'base',
+    orgao:'MPF — Ministério Público Federal',
+    cargo:'Analista / Técnico do MPF',
+    status:'previsto', esfera:'federal', nivel:'superior',
+    vagas:'~300', salario:'R$ 8.800 a R$ 22.000', prazo:'Previsão: 2026',
+    banca:'CEBRASPE', uf:'BR',
+    desc:'⚠️ SEM EDITAL ABERTO. MPF prevê concurso para reposição de quadros. Edital esperado pela CEBRASPE.',
+    link_edital:'https://www.cebraspe.org.br/concursos',
+    link_banca:'https://www.cebraspe.org.br/concursos'
+  },
+  {
+    id:'correios', src:'base',
+    orgao:'ECT — Correios',
+    cargo:'Carteiro / Operador de Triagem e Transbordo / Analista',
+    status:'previsto', esfera:'federal', nivel:'medio',
+    vagas:'~4.000', salario:'R$ 2.429 a R$ 5.800', prazo:'Previsão: 2025-2026',
+    banca:'IBFC ou CESGRANRIO', uf:'BR',
+    desc:'⚠️ SEM EDITAL ABERTO. Correios abrem concurso com frequência. Vagas em todo o Brasil. Acompanhe o PCI Concursos.',
+    link_edital:'https://www.pciconcursos.com.br/concursos/federais/',
+    link_banca:'https://www.ibfc.org.br/concursos'
+  },
+  {
+    id:'ibge', src:'base',
+    orgao:'IBGE — Instituto Brasileiro de Geografia e Estatística',
+    cargo:'Agente de Pesquisas e Mapeamento',
+    status:'previsto', esfera:'federal', nivel:'medio',
+    vagas:'~900', salario:'R$ 2.100', prazo:'Verificar FGV',
+    banca:'FGV', uf:'BR',
+    desc:'IBGE realiza concursos para recenseadores e agentes de pesquisa periodicamente. Verifique a FGV Conhecimento.',
+    link_edital:'https://conhecimento.fgv.br/concursos',
+    link_banca:'https://conhecimento.fgv.br/concursos'
+  },
+  {
+    id:'dpf', src:'base',
+    orgao:'Defensoria Pública da União (DPU)',
+    cargo:'Defensor Público Federal / Apoio Técnico',
+    status:'previsto', esfera:'federal', nivel:'superior',
+    vagas:'a definir', salario:'R$ 14.000 a R$ 28.000', prazo:'Previsão: 2025-2026',
+    banca:'CEBRASPE', uf:'BR',
+    desc:'⚠️ SEM EDITAL ABERTO. DPU prevê reposição de defensores e servidores. Exige Direito para o cargo de defensor.',
+    link_edital:'https://www.cebraspe.org.br/concursos',
+    link_banca:'https://www.cebraspe.org.br/concursos'
+  },
 
-// ============================================================
-// ANTHROPIC API — busca e estrutura os concursos
-// ============================================================
-async function callClaude(prompt, system) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 8000,
-      system: system,
-      messages: [{ role: 'user', content: prompt }],
-      tools: [{
-        type: 'web_search_20250305',
-        name: 'web_search'
-      }]
-    })
-  });
-  const data = await res.json();
-  if (data.error) throw new Error(data.error.message);
+  // ── ESTADUAIS ─────────────────────────────────────────────────────────
+  {
+    id:'tjsp', src:'base',
+    orgao:'TJ-SP — Tribunal de Justiça de São Paulo',
+    cargo:'Escrevente Técnico Judiciário',
+    status:'previsto', esfera:'estadual', nivel:'medio',
+    vagas:'~2.000', salario:'R$ 4.800 + benefícios', prazo:'Verificar VUNESP',
+    banca:'VUNESP', uf:'SP',
+    desc:'TJSP abre concurso regularmente para Escrevente Técnico. Um dos mais concorridos do estado. Verifique a VUNESP.',
+    link_edital:'https://www.vunesp.com.br',
+    link_banca:'https://www.vunesp.com.br'
+  },
+  {
+    id:'seed-pr', src:'base',
+    orgao:'SEED-PR — Educação do Estado do Paraná',
+    cargo:'Professor QPM — diversas disciplinas',
+    status:'previsto', esfera:'estadual', nivel:'superior',
+    vagas:'~12.000', salario:'R$ 4.200 a R$ 6.800', prazo:'Verificar FCC',
+    banca:'FCC', uf:'PR',
+    desc:'Um dos maiores concursos de professores do Brasil. Rede pública do Paraná. Vagas em inúmeras disciplinas.',
+    link_edital:'https://www.concursosfcc.com.br/concursos/',
+    link_banca:'https://www.concursosfcc.com.br/concursos/'
+  },
+  {
+    id:'tjmg', src:'base',
+    orgao:'TJ-MG — Tribunal de Justiça de MG',
+    cargo:'Analista Judiciário / Técnico Judiciário',
+    status:'previsto', esfera:'estadual', nivel:'superior',
+    vagas:'~1.100', salario:'R$ 5.183 a R$ 8.474', prazo:'Verificar IBFC',
+    banca:'IBFC', uf:'MG',
+    desc:'TJMG abre concursos periodicamente para diversas especialidades judiciárias. Verifique o site da IBFC.',
+    link_edital:'https://www.ibfc.org.br/concursos',
+    link_banca:'https://www.ibfc.org.br/concursos'
+  },
+  {
+    id:'pcrj', src:'base',
+    orgao:'Polícia Civil — Rio de Janeiro (PC-RJ)',
+    cargo:'Delegado, Investigador, Escrivão, Papiloscopista, Perito',
+    status:'previsto', esfera:'estadual', nivel:'superior',
+    vagas:'~2.600', salario:'R$ 4.500 a R$ 18.000', prazo:'Verificar FGV',
+    banca:'FGV', uf:'RJ',
+    desc:'PC-RJ realiza concursos com frequência. Verifique fases e editais no portal FGV Conhecimento.',
+    link_edital:'https://conhecimento.fgv.br/concursos',
+    link_banca:'https://conhecimento.fgv.br/concursos'
+  },
+  {
+    id:'sefazsp', src:'base',
+    orgao:'SEFAZ-SP — Fazenda do Estado de São Paulo',
+    cargo:'Agente Fiscal de Rendas (AFR)',
+    status:'previsto', esfera:'estadual', nivel:'superior',
+    vagas:'~100', salario:'R$ 18.000+', prazo:'Previsão: 2025-2026',
+    banca:'FCC', uf:'SP',
+    desc:'⚠️ SEM EDITAL ABERTO. Um dos concursos estaduais mais valorizados. Quando sair, o edital estará na FCC.',
+    link_edital:'https://www.concursosfcc.com.br/concursos/',
+    link_banca:'https://www.concursosfcc.com.br/concursos/'
+  },
+  {
+    id:'tjrs', src:'base',
+    orgao:'TJ-RS — Tribunal de Justiça do RS',
+    cargo:'Analista Judiciário / Oficial de Justiça',
+    status:'previsto', esfera:'estadual', nivel:'superior',
+    vagas:'~600', salario:'R$ 5.600 a R$ 8.200', prazo:'Verificar FCC',
+    banca:'FCC', uf:'RS',
+    desc:'TJRS abre concursos periodicamente. Verifique o cronograma e editais na FCC.',
+    link_edital:'https://www.concursosfcc.com.br/concursos/',
+    link_banca:'https://www.concursosfcc.com.br/concursos/'
+  },
+  {
+    id:'pmmg', src:'base',
+    orgao:'PM-MG — Polícia Militar de Minas Gerais',
+    cargo:'Soldado / Oficial da Polícia Militar',
+    status:'previsto', esfera:'estadual', nivel:'medio',
+    vagas:'~2.700', salario:'R$ 3.800', prazo:'Verificar FUMARC',
+    banca:'FUMARC', uf:'MG',
+    desc:'PMMG uma das maiores corporações estaduais do Brasil. Verifique edital e datas na FUMARC.',
+    link_edital:'https://www.fumarc.com.br',
+    link_banca:'https://www.fumarc.com.br'
+  },
+  {
+    id:'sedf', src:'base',
+    orgao:'SEDF — Secretaria de Educação do DF',
+    cargo:'Professor da Rede Pública do Distrito Federal',
+    status:'previsto', esfera:'estadual', nivel:'superior',
+    vagas:'~2.000', salario:'R$ 4.800 a R$ 7.200', prazo:'Previsão: 2025-2026',
+    banca:'CEBRASPE', uf:'DF',
+    desc:'⚠️ SEM EDITAL ABERTO. Grande demanda reprimida para professores do DF. Edital esperado via CEBRASPE.',
+    link_edital:'https://www.cebraspe.org.br/concursos',
+    link_banca:'https://www.cebraspe.org.br/concursos'
+  },
 
-  // Collect all text from response
-  const textBlocks = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
-  return textBlocks;
-}
+  // ── MUNICIPAIS ────────────────────────────────────────────────────────
+  {
+    id:'funserv', src:'base',
+    orgao:'FUNSERV — Sorocaba/SP',
+    cargo:'Analista Previdenciário',
+    status:'aberto', esfera:'municipal', nivel:'superior',
+    vagas:'10', salario:'R$ 6.500', prazo:'2026',
+    banca:'Instituto Avalia', uf:'SP',
+    desc:'Fundação de Previdência dos Servidores Municipais de Sorocaba. Gestão do RPPS. Matérias: CF/88, EC 103/2019, Lei 9.717/98, atuária, CMN 4.963/2021.',
+    link_edital:'https://www.institutoavalia.com.br',
+    link_banca:'https://www.institutoavalia.com.br'
+  },
+  {
+    id:'pmsp', src:'base',
+    orgao:'Prefeitura de São Paulo (SP)',
+    cargo:'Analista, Técnico, Assistente — diversas secretarias',
+    status:'previsto', esfera:'municipal', nivel:'superior',
+    vagas:'~2.000', salario:'R$ 3.000 a R$ 12.000', prazo:'Verificar FCC',
+    banca:'FCC', uf:'SP',
+    desc:'Prefeitura de SP abre concursos regularmente. Verifique os editais abertos no site da FCC Concursos.',
+    link_edital:'https://www.concursosfcc.com.br/concursos/',
+    link_banca:'https://www.concursosfcc.com.br/concursos/'
+  },
 
-const SYSTEM_PROMPT = `Você é um especialista em concursos públicos brasileiros. Quando o usuário pedir uma busca de concursos, use a ferramenta web_search para buscar informações ATUAIS e REAIS sobre concursos públicos no Brasil.
+  // ── PORTAL GERAL (sempre atualizado) ──────────────────────────────────
+  {
+    id:'pci-geral', src:'base',
+    orgao:'🔍 Ver TODOS os concursos abertos',
+    cargo:'Federal, Estadual e Municipal — todas as áreas',
+    status:'aberto', esfera:'federal', nivel:'superior',
+    vagas:'Centenas', salario:'Varia por concurso', prazo:'Vários',
+    banca:'Diversas', uf:'BR',
+    desc:'Lista completa e atualizada de todos os concursos públicos abertos no Brasil, em todos os estados e esferas.',
+    link_edital:'https://www.pciconcursos.com.br/concursos/',
+    link_banca:'https://www.pciconcursos.com.br/concursos/'
+  },
+  {
+    id:'pci-federal', src:'base',
+    orgao:'🏛️ Concursos Federais Abertos — PCI',
+    cargo:'Todos os órgãos federais com seleção ativa',
+    status:'aberto', esfera:'federal', nivel:'superior',
+    vagas:'Vários', salario:'Varia', prazo:'Vários',
+    banca:'Diversas', uf:'BR',
+    desc:'Portal PCI Concursos com lista completa de concursos federais com inscrições abertas ou provas previstas.',
+    link_edital:'https://www.pciconcursos.com.br/concursos/federais/',
+    link_banca:'https://www.pciconcursos.com.br/concursos/federais/'
+  },
+  {
+    id:'pci-estadual', src:'base',
+    orgao:'🗺️ Concursos Estaduais Abertos — PCI',
+    cargo:'Todos os estados — inscrições abertas',
+    status:'aberto', esfera:'estadual', nivel:'medio',
+    vagas:'Vários', salario:'Varia', prazo:'Vários',
+    banca:'Diversas', uf:'BR',
+    desc:'Portal PCI com todos os concursos estaduais com inscrições abertas em qualquer estado do Brasil.',
+    link_edital:'https://www.pciconcursos.com.br/concursos/estaduais/',
+    link_banca:'https://www.pciconcursos.com.br/concursos/estaduais/'
+  },
+  {
+    id:'pci-municipal', src:'base',
+    orgao:'🏙️ Concursos Municipais Abertos — PCI',
+    cargo:'Prefeituras e câmaras — inscrições abertas',
+    status:'aberto', esfera:'municipal', nivel:'medio',
+    vagas:'Vários', salario:'Varia', prazo:'Vários',
+    banca:'Diversas', uf:'BR',
+    desc:'PCI Concursos com lista de concursos municipais abertos em cidades de todos os estados.',
+    link_edital:'https://www.pciconcursos.com.br/concursos/municipais/',
+    link_banca:'https://www.pciconcursos.com.br/concursos/municipais/'
+  },
+];
 
-Após buscar, responda APENAS com um JSON válido (sem markdown, sem backtick, sem texto antes ou depois) no seguinte formato exato:
+// ═══════════════════════════════════════════════════════
+// RSS PARSER — Lê feeds do PCI Concursos via CORS proxy
+// ═══════════════════════════════════════════════════════
+const CORS_PROXIES = [
+  u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+  u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+  u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
+];
 
-{
-  "concursos": [
-    {
-      "id": "numero_unico",
-      "orgao": "Nome do Órgão",
-      "cargo": "Nome do cargo ou área",
-      "status": "aberto|inscricoes|previsto|encerrado",
-      "esfera": "federal|estadual|municipal",
-      "nivel": "superior|medio|fundamental",
-      "vagas": "número ou 'a definir'",
-      "salario": "valor ou faixa salarial",
-      "prazo_inscricao": "data ou 'a definir'",
-      "banca": "nome da banca ou 'a definir'",
-      "uf": "sigla do estado ou 'BR' para federal",
-      "descricao": "2-3 linhas sobre o concurso, datas, detalhes importantes",
-      "link": "url oficial ou site de referência"
-    }
-  ],
-  "fonte_data": "data de hoje",
-  "total": numero
-}
+const RSS_FEEDS = [
+  { url:'https://www.pciconcursos.com.br/rss/nacional.xml', id:'pci-n', label:'PCI Nacional', esfera:'federal' },
+  { url:'https://www.pciconcursos.com.br/rss/federal.xml',  id:'pci-f', label:'PCI Federal',  esfera:'federal' },
+  { url:'https://www.pciconcursos.com.br/rss/estadual.xml', id:'pci-e', label:'PCI Estadual', esfera:'estadual' },
+  { url:'https://www.pciconcursos.com.br/rss/municipal.xml',id:'pci-m', label:'PCI Municipal',esfera:'municipal' },
+];
 
-Status deve ser:
-- "aberto": inscrições abertas OU concurso em andamento (provas marcadas)
-- "inscricoes": inscrições abertas (fase de inscrição atual)
-- "previsto": concurso previsto/autorizado mas ainda sem edital
-- "encerrado": provas realizadas, aguardando resultado
-
-Busque ao menos 15-20 concursos diferentes. Priorize concursos REAIS e RECENTES de 2024-2026. Inclua federais, estaduais e municipais relevantes. Se não encontrar informação sobre algum campo, use "a definir".`;
-
-// ============================================================
-// BUSCA PRINCIPAL
-// ============================================================
-async function buscarConcursos() {
-  const query = document.getElementById('search-input').value.trim()
-    || 'concursos públicos abertos inscrições 2025 2026 Brasil';
-  currentSearch = query;
-  await executarBusca(query);
-}
-
-async function buscarRapido(query) {
-  document.getElementById('search-input').value = query;
-  currentSearch = query;
-  await executarBusca(query);
-}
-
-async function carregarConcursos() {
-  await executarBusca('concursos públicos abertos inscrições abertas previstos 2025 2026 Brasil todos os órgãos');
-}
-
-async function executarBusca(query) {
-  if (isLoading) return;
-  isLoading = true;
-
-  setLoading(true);
-  document.getElementById('cards-grid').innerHTML = '';
-  document.getElementById('empty-state').classList.remove('active');
-
-  const steps = [
-    'Buscando nas fontes oficiais...',
-    'Consultando portais de concursos...',
-    'Verificando editais recentes...',
-    'Organizando resultados...',
-  ];
-  let stepIdx = 0;
-  const stepInterval = setInterval(() => {
-    document.getElementById('loading-step').textContent = steps[stepIdx % steps.length];
-    stepIdx++;
-  }, 2000);
-
-  try {
-    const userPrompt = `Busque e liste concursos públicos brasileiros relacionados a: "${query}". 
-    Data de hoje: ${new Date().toLocaleDateString('pt-BR')}.
-    Busque concursos abertos, com inscrições abertas, e previstos para 2025-2026.
-    Inclua o máximo de concursos reais que encontrar (mínimo 15).
-    Responda SOMENTE com o JSON, sem nenhum texto adicional.`;
-
-    const resposta = await callClaude(userPrompt, SYSTEM_PROMPT);
-
-    let json;
+async function fetchRSS(feedUrl) {
+  for (const makeProxy of CORS_PROXIES) {
     try {
-      // Try to parse directly
-      json = JSON.parse(resposta.trim());
-    } catch {
-      // Try to extract JSON from response
-      const match = resposta.match(/\{[\s\S]*\}/);
-      if (match) {
-        json = JSON.parse(match[0]);
-      } else {
-        throw new Error('Resposta não é JSON válido');
-      }
-    }
-
-    allConcursos = json.concursos || [];
-    allConcursos = allConcursos.map((c, i) => ({ ...c, id: c.id || String(i + 1) }));
-
-    updateStats();
-    applyFilter();
-    updateLastTime();
-
-  } catch (err) {
-    console.error('Erro:', err);
-    // Fallback com dados exemplo
-    allConcursos = getFallbackData();
-    updateStats();
-    applyFilter();
-    document.getElementById('result-count').innerHTML =
-      '<span style="color:var(--gold)">⚠️ Sem conexão com IA — exibindo dados de exemplo</span>';
-  } finally {
-    clearInterval(stepInterval);
-    setLoading(false);
-    isLoading = false;
+      const url = makeProxy(feedUrl);
+      const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) continue;
+      const txt = await res.text();
+      if (txt.includes('<item') || txt.includes('<entry')) return txt;
+    } catch { /* try next proxy */ }
   }
+  return null;
 }
 
-// ============================================================
-// FALLBACK DATA (when API is unavailable)
-// ============================================================
-function getFallbackData() {
-  return [
-    { id:'1', orgao:'Polícia Federal', cargo:'Delegado, Agente, Escrivão, Papiloscopista', status:'previsto', esfera:'federal', nivel:'superior', vagas:'~1.500', salario:'R$ 7.000 a R$ 26.000', prazo_inscricao:'2026', banca:'CEBRASPE', uf:'BR', descricao:'Concurso da PF previsto para 2026 com vagas em diversas carreiras. Aguardando autorização e edital.', link:'https://www.gov.br/pf' },
-    { id:'2', orgao:'Receita Federal (SRFB)', cargo:'Auditor Fiscal da Receita Federal', status:'previsto', esfera:'federal', nivel:'superior', vagas:'~500', salario:'R$ 21.029', prazo_inscricao:'2026', banca:'CEBRASPE', uf:'BR', descricao:'Concurso da Receita Federal aguardado para 2026. Uma das carreiras mais bem remuneradas do governo federal.', link:'https://www.gov.br/receitafederal' },
-    { id:'3', orgao:'INSS', cargo:'Técnico do Seguro Social', status:'previsto', esfera:'federal', nivel:'medio', vagas:'~7.500', salario:'R$ 5.905', prazo_inscricao:'2025-2026', banca:'a definir', uf:'BR', descricao:'Aguardado como um dos maiores concursos de 2025-2026. Enorme demanda reprimida.', link:'https://www.gov.br/inss' },
-    { id:'4', orgao:'Banco do Brasil', cargo:'Escriturário — Agente Comercial', status:'inscricoes', esfera:'federal', nivel:'medio', vagas:'4.000', salario:'R$ 3.622', prazo_inscricao:'a definir', banca:'CESGRANRIO', uf:'BR', descricao:'Concurso BB com vagas em todo o Brasil para agências. Salário inicial mais benefícios.', link:'https://www.bb.com.br/concurso' },
-    { id:'5', orgao:'Prefeitura de São Paulo', cargo:'Analista, Técnico e Assistente', status:'aberto', esfera:'municipal', nivel:'superior', vagas:'2.200', salario:'R$ 3.000 a R$ 12.000', prazo_inscricao:'30/04/2026', banca:'FCC', uf:'SP', descricao:'Múltiplos cargos na Prefeitura de São Paulo em diversas áreas. Inscrições abertas.', link:'https://www.prefeitura.sp.gov.br' },
-    { id:'6', orgao:'Ministério da Gestão (ENAP)', cargo:'Analista de Políticas Sociais', status:'previsto', esfera:'federal', nivel:'superior', vagas:'200', salario:'R$ 8.448', prazo_inscricao:'2026', banca:'a definir', uf:'BR', descricao:'Carreira do executivo federal voltada para gestão e políticas públicas.', link:'https://www.gov.br' },
-    { id:'7', orgao:'Governo do Estado de SP — SEFAZ', cargo:'Agente Fiscal de Rendas', status:'previsto', esfera:'estadual', nivel:'superior', vagas:'100', salario:'R$ 18.000+', prazo_inscricao:'2026', banca:'FCC', uf:'SP', descricao:'Concurso da Fazenda paulista, um dos mais concorridos do estado.', link:'https://www.fazenda.sp.gov.br' },
-    { id:'8', orgao:'Caixa Econômica Federal', cargo:'Técnico Bancário Novo', status:'aberto', esfera:'federal', nivel:'medio', vagas:'4.000', salario:'R$ 3.760', prazo_inscricao:'a confirmar', banca:'CESGRANRIO', uf:'BR', descricao:'Concurso da Caixa com vagas distribuídas em todo território nacional.', link:'https://www.caixa.gov.br' },
-    { id:'9', orgao:'TJSP — Tribunal de Justiça SP', cargo:'Escrevente Técnico Judiciário', status:'aberto', esfera:'estadual', nivel:'medio', vagas:'2.065', salario:'R$ 4.800', prazo_inscricao:'maio/2026', banca:'VUNESP', uf:'SP', descricao:'Um dos mais esperados de SP. Estabilidade e bons benefícios.', link:'https://www.tjsp.jus.br' },
-    { id:'10', orgao:'FUNSERV — Sorocaba/SP', cargo:'Analista Previdenciário', status:'aberto', esfera:'municipal', nivel:'superior', vagas:'10', salario:'R$ 6.500', prazo_inscricao:'2026', banca:'Instituto Avalia', uf:'SP', descricao:'Concurso da Fundação de Previdência de Sorocaba para gestão do RPPS municipal.', link:'https://www.sorocaba.sp.gov.br' },
-  ];
-}
+function parseRSSItems(xml, defaultEsfera) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(xml, 'application/xml');
+  const items = [...doc.querySelectorAll('item, entry')];
+  const results = [];
 
-// ============================================================
-// FILTER & RENDER
-// ============================================================
-function setFilter(type, value) {
-  // Toggle off if same
-  if (activeFilter[type] === value && value !== 'todos') {
-    activeFilter[type] = type === 'status' ? 'todos' : null;
-  } else {
-    activeFilter[type] = value;
-  }
+  items.forEach((item, i) => {
+    const title = (item.querySelector('title')?.textContent || '').trim();
+    const link  = (item.querySelector('link')?.textContent || item.querySelector('link')?.getAttribute('href') || '').trim();
+    const desc  = (item.querySelector('description, summary, content')?.textContent || '').trim();
+    const pubDate = item.querySelector('pubDate, published, updated')?.textContent || '';
 
-  // Update button states
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.classList.remove('active');
-    const f = btn.dataset.filter;
-    if (f) {
-      const [ft, fv] = f.split('-', 2);
-      if (activeFilter[ft] === fv || (ft === 'status' && fv === 'todos' && activeFilter.status === 'todos')) {
-        if (!activeFilter[ft] && fv !== 'todos') return;
-        btn.classList.add('active');
-      }
-    }
+    if (!title || title.length < 5) return;
+
+    // Parse useful info from title/description
+    const orgao = extractOrgao(title);
+    const cargo = extractCargo(title, desc);
+    const vagas = extractVagas(title + ' ' + desc);
+    const salario = extractSalario(title + ' ' + desc);
+    const banca = extractBanca(title + ' ' + desc);
+    const uf = extractUF(title + ' ' + desc);
+    const status = detectStatus(title + ' ' + desc);
+    const nivel = detectNivel(title + ' ' + desc);
+
+    results.push({
+      id: `rss-${defaultEsfera}-${i}-${Date.now()}`,
+      src: 'rss',
+      orgao: orgao || title.substring(0, 60),
+      cargo: cargo || 'Ver edital completo',
+      status,
+      esfera: detectEsfera(title + ' ' + desc) || defaultEsfera,
+      nivel,
+      vagas,
+      salario,
+      prazo: extractPrazo(title + ' ' + desc),
+      banca,
+      uf,
+      desc: cleanDesc(desc).substring(0, 200) || title,
+      link_edital: link || 'https://pciconcursos.com.br',
+      link_banca: banca ? getBancaUrl(banca) : '',
+      pubDate: parseDate(pubDate),
+    });
   });
 
-  // Activate "todos" status button if that's selected
-  if (activeFilter.status === 'todos') {
-    document.querySelector('[data-filter="status-todos"]')?.classList.add('active');
-  }
-
-  applyFilter();
+  return results;
 }
 
-function applyFilter() {
-  filtered = allConcursos.filter(c => {
-    if (activeFilter.status && activeFilter.status !== 'todos' && c.status !== activeFilter.status) return false;
-    if (activeFilter.esfera && c.esfera !== activeFilter.esfera) return false;
-    if (activeFilter.nivel && c.nivel !== activeFilter.nivel) return false;
+// ── Extraction helpers ─────────────────────────────────
+function extractOrgao(txt) {
+  const patterns = [
+    /(?:concurso|edital)[^\-–]*?(?:da?o?\s+)([A-ZÁÉÍÓÚÂÃÕÇ][^,\-–\(]{4,50})/i,
+    /^([A-ZÁÉÍÓÚÂÃÕÇ][A-Za-zÁÉÍÓÚÂÃÕÇáéíóúâãõç\s\-]+?)(?:\s+abre|\s+lança|\s+divulga|\s+publica|\s+oferta|\s+–)/i,
+  ];
+  for (const p of patterns) {
+    const m = txt.match(p);
+    if (m && m[1] && m[1].length > 4) return m[1].trim().substring(0,60);
+  }
+  // Extract up to first dash/parenthesis
+  const short = txt.replace(/concurso\s+público\s*/i,'').split(/[\-–\(]/)[0].trim();
+  return short.length > 5 ? short.substring(0,55) : '';
+}
+
+function extractCargo(title, desc) {
+  const combined = title + ' ' + desc;
+  const m = combined.match(/para\s+(?:o\s+cargo\s+de\s+|os?\s+cargos?\s+de\s+)?([A-Za-zÁÉÍÓÚÂÃÕÇáéíóúâãõç\s,\/]{5,60}?)(?:\s+com|\s+–|\s+\(|\.|,\s+[0-9])/i);
+  if (m) return m[1].trim().substring(0,80);
+  const cargo = title.replace(/concurso público/i,'').replace(/inscrições/i,'').trim();
+  return cargo.substring(0,70);
+}
+
+function extractVagas(txt) {
+  const m = txt.match(/(\d[\d\.]+)\s*(?:vagas?|oportunidades?)/i);
+  return m ? m[1].replace('.','') : 'Ver edital';
+}
+
+function extractSalario(txt) {
+  const m = txt.match(/R\$\s*[\d\.]+(?:[\.,]\d+)?(?:\s*a\s*R\$\s*[\d\.]+(?:[\.,]\d+)?)?/i);
+  return m ? m[0] : 'Ver edital';
+}
+
+function extractBanca(txt) {
+  const bancas = ['CEBRASPE','CESPE','FCC','FGV','VUNESP','CESGRANRIO','IBFC','FUNCAB','IADES','QUADRIX','FEPESE','AOCP','INSTITUTO AVALIA','AVALIA','FUMARC','IDIB','FUNDATEC','COMVEST'];
+  const u = txt.toUpperCase();
+  return bancas.find(b => u.includes(b)) || '';
+}
+
+function getBancaUrl(banca) {
+  const urls = {
+    'CEBRASPE':'https://www.cebraspe.org.br/concursos','CESPE':'https://www.cebraspe.org.br/concursos',
+    'FCC':'https://www.concursosfcc.com.br','FGV':'https://conhecimento.fgv.br/concursos',
+    'VUNESP':'https://www.vunesp.com.br','CESGRANRIO':'https://www.cesgranrio.org.br',
+    'IBFC':'https://www.ibfc.org.br','QUADRIX':'https://www.quadrix.org.br',
+    'FUMARC':'https://www.fumarc.com.br','INSTITUTO AVALIA':'https://www.institutoavalia.com.br',
+    'AVALIA':'https://www.institutoavalia.com.br',
+  };
+  return urls[banca] || '';
+}
+
+function extractUF(txt) {
+  const estados = {
+    'São Paulo':'SP','Rio de Janeiro':'RJ','Minas Gerais':'MG','Bahia':'BA','Paraná':'PR',
+    'Rio Grande do Sul':'RS','Pernambuco':'PE','Ceará':'CE','Goiás':'GO','Santa Catarina':'SC',
+    'Mato Grosso':'MT','Espírito Santo':'ES','Amazonas':'AM','Pará':'PA','Maranhão':'MA',
+    'Distrito Federal':'DF','Tocantins':'TO','Rondônia':'RO','Piauí':'PI','Alagoas':'AL',
+  };
+  const ufRegex = /\b(AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO)\b/;
+  const m = txt.match(ufRegex);
+  if (m) return m[1];
+  for (const [nome, sig] of Object.entries(estados)) {
+    if (txt.toLowerCase().includes(nome.toLowerCase())) return sig;
+  }
+  if (/\bfederal\b|\bnacional\b/i.test(txt)) return 'BR';
+  return '';
+}
+
+function extractPrazo(txt) {
+  // Data no formato DD/MM/AAAA
+  const m1 = txt.match(/(\d{2}\/\d{2}\/\d{4})/);
+  if (m1) return m1[1];
+  // "até XX de mês de AAAA"
+  const m2 = txt.match(/até\s+(\d{1,2}\s+de\s+\w+\s+de\s+\d{4})/i);
+  if (m2) return m2[1];
+  const m3 = txt.match(/(jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)[a-z]*\/?(\d{4})/i);
+  if (m3) return `${m3[1]}/${m3[2]}`;
+  return 'Ver edital';
+}
+
+function detectStatus(txt) {
+  const t = txt.toLowerCase();
+  if (/encerr|result|gabarit|aprovad/.test(t)) return 'encerrado';
+  if (/inscri[çc][õo]es?\s+(?:abertas?|abriram|est[áa]o|at[ée])/.test(t)) return 'inscricoes';
+  if (/edital\s+publicad|prova\s+marcad|classif/.test(t)) return 'aberto';
+  if (/previsto|autorizado|esperado|previsão/.test(t)) return 'previsto';
+  // default for RSS items (they usually have active inscriptions)
+  return 'rss';
+}
+
+function detectNivel(txt) {
+  const t = txt.toLowerCase();
+  if (/superior|graduação|graduacao|licenciatura|bacharelado|engenheiro|médico|advogado|analista/.test(t)) return 'superior';
+  if (/médio|medio|técnico|tecnico/.test(t)) return 'medio';
+  if (/fundamental|auxiliar|operacional/.test(t)) return 'fundamental';
+  return 'superior';
+}
+
+function detectEsfera(txt) {
+  const t = txt.toLowerCase();
+  if (/^(prefeitura|câmara\s+municipal|pm\s+de|pref\.|município)/i.test(txt)) return 'municipal';
+  if (/governo\s+do\s+estado|secretaria\s+(?:de\s+)?estado|tribunal\s+de\s+jus|polícia\s+civil|polícia\s+militar|tj-|tce-/.test(t)) return 'estadual';
+  if (/federal|inss|tcu|trt|trf|stj|stf|mpf|pgfn|receita\s+federal|polícia\s+federal|anatel|anac|aneel/.test(t)) return 'federal';
+  return null;
+}
+
+function cleanDesc(html) {
+  return html.replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/\s+/g,' ').trim();
+}
+
+function parseDate(str) {
+  if (!str) return 0;
+  const d = new Date(str);
+  return isNaN(d) ? 0 : d.getTime();
+}
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let allC = [...BASE];
+let rssC = [];
+let filtered = [];
+let atv = { status:'todos', esfera:null, nivel:null };
+let searchTxt = '';
+let busy = false;
+
+// ═══════════════════════════════════════════════════════
+// MAIN LOAD
+// ═══════════════════════════════════════════════════════
+async function atualizarTudo() {
+  if (busy) return;
+  busy = true;
+  setLoad(true, 'Carregando feeds RSS...');
+  document.getElementById('es').classList.remove('active');
+
+  // Reset source chips
+  RSS_FEEDS.forEach(f => setChip(f.id, 'loading', `⏳ ${f.label}`));
+  setChip('base', 'loading', '⏳ Base Verificada');
+
+  rssC = [];
+  const fetches = RSS_FEEDS.map(f => fetchAndParse(f));
+  await Promise.allSettled(fetches);
+
+  // Merge: RSS first (newer), then base (no duplicates by organ)
+  const rssOrgaos = new Set(rssC.map(c => normalizeOrgao(c.orgao)));
+  const baseFiltered = BASE.filter(c => !rssOrgaos.has(normalizeOrgao(c.orgao)));
+  allC = [...rssC, ...baseFiltered];
+
+  setChip('base', 'ok', `✅ Base (${baseFiltered.length})`);
+  setLoad(false);
+  busy = false;
+
+  updStats();
+  applyF();
+  updTime();
+}
+
+async function fetchAndParse(feed) {
+  try {
+    const xml = await fetchRSS(feed.url);
+    if (!xml) throw new Error('no data');
+    const items = parseRSSItems(xml, feed.esfera);
+    rssC.push(...items);
+    setChip(feed.id, 'ok', `✅ ${feed.label} (${items.length})`);
+  } catch (e) {
+    setChip(feed.id, 'error', `❌ ${feed.label}`);
+  }
+}
+
+function normalizeOrgao(s) {
+  return s.toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,20);
+}
+
+function setChip(id, type, txt) {
+  const el = document.getElementById(`src-${id}`);
+  if (!el) return;
+  el.textContent = txt;
+  el.className = `src-chip ${type}`;
+}
+
+// ═══════════════════════════════════════════════════════
+// SEARCH & FILTER
+// ═══════════════════════════════════════════════════════
+function buscar() {
+  searchTxt = document.getElementById('si').value.trim().toLowerCase();
+  applyF();
+}
+
+function filtrarTexto(txt) {
+  searchTxt = txt.toLowerCase();
+  document.getElementById('si').value = txt;
+  applyF();
+}
+
+function limparFiltro() {
+  searchTxt = '';
+  document.getElementById('si').value = '';
+  applyF();
+}
+
+function setF(type, val) {
+  atv[type] = type === 'status' ? val : (atv[type] === val ? null : val);
+  document.querySelectorAll('.fb').forEach(b => {
+    b.classList.remove('active');
+    const f = b.dataset.f; if (!f) return;
+    const [ft,fv] = f.split('-',2);
+    if (atv[ft] === fv) b.classList.add('active');
+  });
+  applyF();
+}
+
+function applyF() {
+  filtered = allC.filter(c => {
+    if (atv.status !== 'todos' && c.status !== atv.status) return false;
+    if (atv.esfera && c.esfera !== atv.esfera) return false;
+    if (atv.nivel && c.nivel !== atv.nivel) return false;
+    if (searchTxt) {
+      const hay = (c.orgao+c.cargo+c.desc+(c.uf||'')).toLowerCase();
+      if (!searchTxt.split(/\s+/).every(w => hay.includes(w))) return false;
+    }
     return true;
   });
-  renderCards();
+  render();
 }
 
-function renderCards() {
-  const grid = document.getElementById('cards-grid');
-  const empty = document.getElementById('empty-state');
-  const count = document.getElementById('result-count');
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+const SL = { aberto:'● Aberto', inscricoes:'● Inscrições', previsto:'◎ Previsto',
+             encerrado:'○ Encerrado', rss:'◉ Ao Vivo' };
 
-  if (filtered.length === 0 && allConcursos.length > 0) {
-    empty.classList.add('active');
-    grid.innerHTML = '';
-    count.textContent = 'Nenhum resultado para este filtro';
-    return;
+function render() {
+  const grid = document.getElementById('cg');
+  const empty = document.getElementById('es');
+  const rc = document.getElementById('rc');
+
+  if (!filtered.length) {
+    empty.classList.add('on'); grid.innerHTML = '';
+    rc.textContent = 'Nenhum resultado'; return;
+  }
+  empty.classList.remove('on');
+  rc.innerHTML = `<strong>${filtered.length}</strong> concurso${filtered.length!==1?'s':''} encontrado${filtered.length!==1?'s':''}`;
+
+  const sort = document.getElementById('srtsel').value;
+  let list = [...filtered];
+  if (sort === 'az') list.sort((a,b) => a.orgao.localeCompare(b.orgao, 'pt-BR'));
+  else if (sort === 'vagas') list.sort((a,b) => (parseInt(b.vagas)||0)-(parseInt(a.vagas)||0));
+  else {
+    // RSS (with dates) first, then base
+    list.sort((a,b) => {
+      if (a.src==='rss' && b.src!=='rss') return -1;
+      if (b.src==='rss' && a.src!=='rss') return 1;
+      return (b.pubDate||0)-(a.pubDate||0);
+    });
   }
 
-  empty.classList.remove('active');
-  count.innerHTML = `<strong>${filtered.length}</strong> concursos encontrados`;
-
-  grid.innerHTML = filtered.map(c => buildCard(c)).join('');
-  updateCounts();
+  grid.innerHTML = list.map(cardHTML).join('');
+  updCounts();
 }
 
-function buildCard(c) {
-  const statusLabel = { aberto: '● Aberto', inscricoes: '● Inscrições Abertas', previsto: '◎ Previsto', encerrado: '○ Encerrado' };
-  const statusClass = c.status || 'previsto';
-  const prazoText = c.prazo_inscricao && c.prazo_inscricao !== 'a definir'
-    ? `Prazo: ${c.prazo_inscricao}`
-    : 'Prazo a definir';
-
-  const isUrgente = c.prazo_inscricao && isPrazoUrgente(c.prazo_inscricao);
-
-  return `
-  <div class="concurso-card status-${statusClass}" onclick="abrirModal('${c.id}')">
-    <div class="card-top">
-      <div class="card-tags">
-        ${c.esfera ? `<span class="tag tag-area">${capitalize(c.esfera)}</span>` : ''}
-        ${c.nivel ? `<span class="tag tag-nivel">${labelNivel(c.nivel)}</span>` : ''}
-        ${c.vagas && c.vagas !== 'a definir' ? `<span class="tag tag-vagas">${c.vagas} vagas</span>` : ''}
-        ${c.salario && c.salario !== 'a definir' ? `<span class="tag tag-salario">${c.salario}</span>` : ''}
+function cardHTML(c) {
+  const sc = c.status || 'previsto';
+  const isRSS = c.src === 'rss';
+  return `<div class="cc s-${sc}" onclick="abrirM('${esc(c.id)}')">
+    <div class="ctop">
+      <div class="ctgs">
+        ${c.esfera?`<span class="tag te">${cap(c.esfera)}</span>`:''}
+        ${c.nivel&&c.nivel!=='superior'?`<span class="tag tn">${nlbl(c.nivel)}</span>`:''}
+        ${isRSS?`<span class="tag trss">📡 RSS Ao Vivo</span>`:''}
+        ${c.vagas&&c.vagas!=='Ver edital'?`<span class="tag tv">${esc(c.vagas)} vagas</span>`:''}
+        ${c.salario&&c.salario!=='Ver edital'?`<span class="tag ts">${esc(c.salario)}</span>`:''}
       </div>
-      <span class="status-pill ${statusClass}">${statusLabel[statusClass] || statusClass}</span>
+      <span class="sp ${sc}">${SL[sc]||sc}</span>
     </div>
-    <div class="card-orgao">${escHtml(c.orgao)}</div>
-    <div class="card-cargo">${escHtml(c.cargo)}</div>
-    <div class="card-bottom">
-      ${c.banca && c.banca !== 'a definir' ? `
-      <div class="card-meta">
-        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        ${escHtml(c.banca)}
-      </div>` : ''}
-      ${c.uf ? `
-      <div class="card-meta">
-        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        ${c.uf === 'BR' ? 'Nacional' : c.uf}
-      </div>` : ''}
-      <span class="card-prazo ${isUrgente ? 'urgente' : ''}">${prazoText}</span>
-      ${c.link && c.link !== 'a definir' ? `<a href="${escHtml(c.link)}" target="_blank" class="card-link" onclick="event.stopPropagation()">Ver Edital ↗</a>` : ''}
+    <div class="co">${esc(c.orgao)}</div>
+    <div class="ccar">${esc(c.cargo)}</div>
+    <div class="cbottom">
+      ${c.banca&&c.banca!=='a confirmar'?`<div class="cm">
+        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        ${esc(c.banca)}</div>`:''}
+      ${c.uf?`<div class="cm">
+        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        ${c.uf==='BR'?'Nacional':c.uf}</div>`:''}
+      ${c.prazo&&c.prazo!=='Ver edital'?`<span class="cp">${esc(c.prazo)}</span>`:''}
+      ${c.link_edital?`<a href="${attr(c.link_edital)}" target="_blank" rel="noopener"
+        class="cl ${isRSS?'cl-rss':''}" onclick="event.stopPropagation()">
+        ${isRSS?'📡 Ver notícia ↗':c.status==='previsto'?'🔍 Acompanhar ↗':'📄 Edital / Banca ↗'}</a>`:''}
     </div>
+    ${c.status==='previsto'&&!isRSS?`<div class="fonte-badge" style="color:var(--gld)">⚠️ Sem edital aberto — acompanhe o link acima para novidades</div>`:''}
+    ${isRSS&&c.pubDate?`<div class="fonte-badge">📡 PCI Concursos · ${new Date(c.pubDate).toLocaleDateString('pt-BR')}</div>`:''}
   </div>`;
 }
 
-// ============================================================
+// ═══════════════════════════════════════════════════════
 // MODAL
-// ============================================================
-function abrirModal(id) {
-  const c = allConcursos.find(x => x.id === id);
-  if (!c) return;
-
-  const statusLabel = { aberto: '● Aberto', inscricoes: '● Inscrições Abertas', previsto: '◎ Previsto', encerrado: '○ Encerrado' };
-
-  document.getElementById('modal-title').textContent = c.orgao;
-  document.getElementById('modal-badge').innerHTML =
-    `<span class="status-pill ${c.status}">${statusLabel[c.status] || c.status}</span>`;
-
-  document.getElementById('modal-body').innerHTML = `
-    <div class="modal-section">
-      <div class="modal-section-label">Cargo / Área</div>
-      <div class="modal-section-value">${escHtml(c.cargo)}</div>
+// ═══════════════════════════════════════════════════════
+function abrirM(id) {
+  const c = allC.find(x=>x.id===id); if (!c) return;
+  const sc = c.status||'previsto';
+  const isRSS = c.src==='rss';
+  document.getElementById('m-t').textContent = c.orgao;
+  document.getElementById('m-b').innerHTML = `
+    <span class="sp ${sc}">${SL[sc]||sc}</span>
+    ${isRSS?'<span class="sp rss" style="margin-left:6px">📡 RSS Ao Vivo</span>':''}`;
+  document.getElementById('m-c').innerHTML = `
+    <div style="font-size:13.5px;font-weight:600;margin-bottom:12px;color:var(--ink)">${esc(c.cargo)}</div>
+    ${c.desc?`<div class="mdesc">${esc(c.desc)}</div>`:''}
+    <div class="mgr">
+      <div class="mf"><label>Vagas</label><div class="v vbig">${esc(c.vagas||'—')}</div></div>
+      <div class="mf"><label>Salário</label><div class="v vmoney">${esc(c.salario||'—')}</div></div>
+      <div class="mf"><label>Prazo / Previsão</label><div class="v">${esc(c.prazo||'—')}</div></div>
+      <div class="mf"><label>Banca</label><div class="v">${esc(c.banca||'—')}</div></div>
+      <div class="mf"><label>Esfera</label><div class="v">${cap(c.esfera||'—')}</div></div>
+      <div class="mf"><label>Abrangência</label><div class="v">${c.uf==='BR'?'Nacional':c.uf||'—'}</div></div>
     </div>
-    ${c.descricao ? `<div class="modal-section">
-      <div class="modal-section-label">Sobre o Concurso</div>
-      <div class="modal-section-value">${escHtml(c.descricao)}</div>
-    </div>` : ''}
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-      <div class="modal-section" style="margin:0">
-        <div class="modal-section-label">Vagas</div>
-        <div class="modal-section-value" style="font-size:20px;font-weight:700;font-family:'Syne',sans-serif">${c.vagas || '—'}</div>
-      </div>
-      <div class="modal-section" style="margin:0">
-        <div class="modal-section-label">Salário</div>
-        <div class="modal-section-value" style="font-size:16px;font-weight:700;color:var(--green)">${c.salario || '—'}</div>
-      </div>
-      <div class="modal-section" style="margin:0">
-        <div class="modal-section-label">Prazo de Inscrição</div>
-        <div class="modal-section-value">${c.prazo_inscricao || '—'}</div>
-      </div>
-      <div class="modal-section" style="margin:0">
-        <div class="modal-section-label">Banca Organizadora</div>
-        <div class="modal-section-value">${c.banca || '—'}</div>
-      </div>
-      <div class="modal-section" style="margin:0">
-        <div class="modal-section-label">Esfera</div>
-        <div class="modal-section-value">${capitalize(c.esfera || '—')}</div>
-      </div>
-      <div class="modal-section" style="margin:0">
-        <div class="modal-section-label">Nível</div>
-        <div class="modal-section-value">${labelNivel(c.nivel)}</div>
-      </div>
-    </div>
-    ${c.link && c.link !== 'a definir' ? `<a href="${escHtml(c.link)}" target="_blank" class="modal-link-btn">Ver Edital / Site Oficial ↗</a>` : ''}
-  `;
-
-  document.getElementById('detail-modal').classList.add('open');
+    ${c.status==='previsto'&&!isRSS?`
+      <div style="background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.3);border-radius:9px;padding:12px 14px;margin-bottom:12px;font-size:12.5px;line-height:1.6;color:#7a5c00">
+        <strong>⚠️ SEM EDITAL ABERTO</strong><br>
+        Este concurso está previsto mas ainda não tem edital publicado. Use o link abaixo para acompanhar quando o edital sair.
+      </div>`:''
+    }
+    ${c.link_edital?`<a href="${attr(c.link_edital)}" target="_blank" rel="noopener" class="mlink pri">
+      ${isRSS?'📡 Ver Notícia Completa ↗':c.status==='previsto'?'🔍 Acompanhar na Banca / PCI Concursos ↗':'📄 Acessar Edital / Banca ↗'}
+    </a>`:''}
+    ${c.link_banca&&c.link_banca!==c.link_edital?`<a href="${attr(c.link_banca)}" target="_blank" rel="noopener"
+      class="mlink sec">🏛️ Site da Banca: ${esc(c.banca||'Ver banca')} ↗</a>`:''}
+    ${isRSS?`<a href="https://pciconcursos.com.br" target="_blank" class="mlink pur">🔍 Ver mais no PCI Concursos ↗</a>`:''}
+    <div class="mwarn">⚠️ Sempre confirme datas e informações diretamente nos sites das bancas e dos órgãos. Editais podem ser alterados.</div>`;
+  document.getElementById('mo').classList.add('on');
   document.body.style.overflow = 'hidden';
 }
+function fecharM() { document.getElementById('mo').classList.remove('on'); document.body.style.overflow = ''; }
 
-function fecharModal() {
-  document.getElementById('detail-modal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-// ============================================================
+// ═══════════════════════════════════════════════════════
 // STATS & UTILS
-// ============================================================
-function updateStats() {
-  const counts = { aberto: 0, inscricoes: 0, previsto: 0, encerrado: 0 };
-  allConcursos.forEach(c => { if (counts[c.status] !== undefined) counts[c.status]++; });
-
-  document.getElementById('stat-abertos').textContent = counts.aberto;
-  document.getElementById('stat-inscricoes').textContent = counts.inscricoes;
-  document.getElementById('stat-previstos').textContent = counts.previsto;
-  document.getElementById('stat-total').textContent = allConcursos.length;
-
-  document.getElementById('fc-todos').textContent = allConcursos.length;
-  document.getElementById('fc-aberto').textContent = counts.aberto;
-  document.getElementById('fc-inscricoes').textContent = counts.inscricoes;
-  document.getElementById('fc-previsto').textContent = counts.previsto;
-  document.getElementById('fc-encerrado').textContent = counts.encerrado;
+// ═══════════════════════════════════════════════════════
+function updStats() {
+  const ct={aberto:0,inscricoes:0,previsto:0,encerrado:0,rss:0};
+  allC.forEach(c=>{ if(ct[c.status]!==undefined)ct[c.status]++; });
+  const rssTotal = allC.filter(c=>c.src==='rss').length;
+  document.getElementById('sn-t').textContent = allC.length;
+  document.getElementById('sn-ab').textContent = ct.aberto;
+  document.getElementById('sn-in').textContent = ct.inscricoes;
+  document.getElementById('sn-pr').textContent = ct.previsto;
+  document.getElementById('sn-rss').textContent = rssTotal;
+  document.getElementById('fc-t').textContent = allC.length;
+  document.getElementById('fc-ab').textContent = ct.aberto;
+  document.getElementById('fc-in').textContent = ct.inscricoes;
+  document.getElementById('fc-pv').textContent = ct.previsto;
+  document.getElementById('fc-rss').textContent = rssTotal;
 }
-
-function updateCounts() {
-  const esferas = {federal:0, estadual:0, municipal:0};
-  const niveis = {superior:0, medio:0, fundamental:0};
-  allConcursos.forEach(c => {
-    if (esferas[c.esfera] !== undefined) esferas[c.esfera]++;
-    if (niveis[c.nivel] !== undefined) niveis[c.nivel]++;
-  });
-  document.getElementById('fc-federal').textContent = esferas.federal;
-  document.getElementById('fc-estadual').textContent = esferas.estadual;
-  document.getElementById('fc-municipal').textContent = esferas.municipal;
-  document.getElementById('fc-superior').textContent = niveis.superior;
-  document.getElementById('fc-medio').textContent = niveis.medio;
-  document.getElementById('fc-fundamental').textContent = niveis.fundamental;
+function updCounts() {
+  const e={federal:0,estadual:0,municipal:0},n={superior:0,medio:0,fundamental:0};
+  allC.forEach(c=>{ if(e[c.esfera]!==undefined)e[c.esfera]++; if(n[c.nivel]!==undefined)n[c.nivel]++; });
+  document.getElementById('fc-fed').textContent=e.federal;
+  document.getElementById('fc-est').textContent=e.estadual;
+  document.getElementById('fc-mun').textContent=e.municipal;
+  document.getElementById('fc-sup').textContent=n.superior;
+  document.getElementById('fc-med').textContent=n.medio;
+  document.getElementById('fc-fun').textContent=n.fundamental;
 }
-
-function updateLastTime() {
-  const now = new Date();
-  document.getElementById('last-update-time').textContent =
-    `Última atualização: ${now.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}`;
+function updTime() {
+  const n=new Date();
+  document.getElementById('htime').textContent=n.toLocaleDateString('pt-BR')+' '+n.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 }
-
-function setLoading(show) {
-  const s = document.getElementById('loading-state');
-  const btn = document.getElementById('search-btn');
-  const rfBtn = document.getElementById('refresh-btn');
-  s.classList.toggle('active', show);
-  btn.disabled = show;
-  rfBtn.disabled = show;
-  btn.textContent = show ? 'Buscando...' : 'Buscar Agora';
-  if (!show) btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Buscar Agora`;
-}
-
-function isPrazoUrgente(prazo) {
-  if (!prazo || prazo === 'a definir') return false;
-  const match = prazo.match(/(\d{2})\/(\d{2})\/(\d{4})/);
-  if (!match) return false;
-  const d = new Date(match[3], match[2]-1, match[1]);
-  const diff = (d - new Date()) / (1000*60*60*24);
-  return diff > 0 && diff <= 7;
-}
-
-function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
-
-function labelNivel(n) {
-  return { superior: 'Nível Superior', medio: 'Nível Médio', fundamental: 'Fund./Técnico' }[n] || n || '—';
-}
-
-function escHtml(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function ativarNotificacoes() {
-  if ('Notification' in window) {
-    Notification.requestPermission().then(p => {
-      if (p === 'granted') {
-        new Notification('ConcursasBR', { body: 'Notificações ativadas! Você receberá alertas de novos concursos.' });
-      }
-    });
+function setLoad(on, msg='') {
+  document.getElementById('ls').classList.toggle('on',on);
+  document.getElementById('sb').disabled = on;
+  document.getElementById('rbtn').disabled = on;
+  if (msg) document.getElementById('ltxt').textContent = msg;
+  let si=0;
+  if (on) {
+    const steps=['Conectando às fontes RSS...','Lendo feeds do PCI Concursos...','Processando concursos...','Organizando resultados...'];
+    window._loadInterval = setInterval(()=>{ document.getElementById('lstep').textContent=steps[si++%steps.length]; },2000);
   } else {
-    alert('Seu navegador não suporta notificações. Adicione esta página aos favoritos para voltar sempre!');
+    clearInterval(window._loadInterval);
   }
 }
 
-// ── AUTO REFRESH every 6 hours ─────────────────────────────
-setInterval(() => carregarConcursos(), 6 * 60 * 60 * 1000);
+const cap = s=>s?s[0].toUpperCase()+s.slice(1):'';
+const nlbl = n=>({superior:'Nível Superior',medio:'Nível Médio',fundamental:'Fund./Técnico'}[n]||n||'—');
+const esc = s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const attr = s=>String(s||'').replace(/"/g,'&quot;');
 
-// ── INIT ───────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// AUTO REFRESH every 30 min
+// ═══════════════════════════════════════════════════════
+setInterval(atualizarTudo, 30 * 60 * 1000);
+
 document.addEventListener('DOMContentLoaded', () => {
-  carregarConcursos();
-  updateLastTime();
-  setInterval(updateLastTime, 60000);
+  updTime();
+  setInterval(updTime, 60000);
+  atualizarTudo();
 });
 </script>
 </body>
